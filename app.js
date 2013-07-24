@@ -3,32 +3,41 @@
  * Module dependencies.
  */
 
-var service = require('./modules/services');
-var crud = require('./modules/crud');
-
-
 var express = require('express');
 var io = require('socket.io');
 
 var PORT = 4242;
 
-var app = express(),
-    http = require('http'),
-    server = http.createServer(app),
-    io = require('socket.io').listen(server);
+var app = express();
+var http = require('http');
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
 
-	io.set('log level', 1);
+io.set('log level', 1);
 
 
-// app.configure(function(){
-//   app.use(express.methodOverride());
-//   app.use(express.bodyParser());
-//   app.use(express.static(__dirname + '/'));
-//   app.use(app.router);
-// });
+app.configure(function(){
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'jade');
+  app.locals.pretty = true;
+  app.use(express.favicon());
+  //app.use(express.logger('dev'));
+  app.use(express.bodyParser());
+  app.use(express.cookieParser());
+  app.use(express.session({ secret: 'web-scraper-center' }));
+  app.use(express.methodOverride());
+  app.use(require('stylus').middleware({ src: __dirname + '/app/public' }));
+  app.use(express.static(__dirname + '/public'));
+});
+
+app.configure('development', function(){
+  app.use(express.errorHandler());
+});
+
+require('./routes/router')(app);
 
 server.listen(PORT, function (){
-  console.log("working! on port " + PORT );
+  console.log("working! on port "+ PORT);
 });
 
 

@@ -1,7 +1,7 @@
 
 
 var cheerio = require('cheerio');
-var crud = require('./crud');
+var IM = require('./item-manager');
 
 exports.scrap = function(body){
 
@@ -24,7 +24,7 @@ exports.scrap = function(body){
                   'fecha':fecha
                 };
 
-  crud.save(post);
+  IM.save(post);
 
 
 };

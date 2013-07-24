@@ -1,0 +1,29 @@
+#subscription-form-container
+	form( method="post")#subscription-form-.form-horizontal.well.span6
+		h1 Subscriptions
+		p#sub1.subheading Please insert your subscriptions.
+		fieldset
+			p#sub2.subheading
+			ul#subs
+				each it in subs
+					li #{it.title}
+			
+		hr
+		#user-cg.control-group
+			label.control-label(for='subs-tf') Subs Name
+			.controls
+				input#user-tf.input-xlarge.disabled(type='text', name='sub_name', value='Subscription name')
+			label.control-label(for='subs-url') Subs URL
+			.controls
+				input#user-tf.input-xlarge.disabled(type='text', name='sub_url', value='Subscription URL')
+			label.control-label(for='subs-type') Subs Type
+			.controls
+				select#substype-list(name='sub_type')
+						each subs in substype
+							option(value=subs.short)= subs.name
+		.form-actions
+			button(type='button')#subscription-form-btn1.btn
+
+// display form errors in a custom modal window //
+
+include modals/form-errors
