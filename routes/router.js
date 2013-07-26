@@ -4,8 +4,49 @@ var AM = require('../modules/account-manager');
 var EM = require('../modules/email-dispatcher');
 var IM = require('../modules/item-manager');
 var service = require('../modules/services');
+var item = require('../modules/item-manager');
 
 module.exports = function(app) {
+
+
+
+
+//angular list page
+	app.get('/itemList', function(req, res) {
+	    if (req.session.user == null){
+	// if user is not logged-in redirect back to login page //
+	        res.redirect('/');
+	    }   else{
+			res.render('itemList', {
+				title : 'Publisher Home'
+			});
+	    }
+	});
+
+
+
+
+
+// Recibe los datos del formulario add
+	app.post('/additem', function(req,res){
+		var obj = req.body;
+		obj.fecha = new Date();
+
+		console.log(obj);
+		item.save(obj)
+		res.redirect('/new');
+	});
+// Add new item into Data Base
+	app.get('/new', function(req, res) {
+	    if (req.session.user == null){
+	// if user is not logged-in redirect back to login page //
+	        res.redirect('/');
+	    }   else{
+			res.render('new', {
+				title : 'Publisher Home'
+			});
+	    }
+	});
 
 //Cross-origin request error parser
 	app.all('/*', function(req, res, next) {
@@ -51,7 +92,7 @@ module.exports = function(app) {
 			});
 		}
 	});
-	
+
 	app.post('/', function(req, res){
 		AM.manualLogin(req.param('user'), req.param('pass'), function(e, o){
 			if (!o){
@@ -66,9 +107,9 @@ module.exports = function(app) {
 			}
 		});
 	});
-	
+
 // logged-in user homepage //
-	
+
 	app.get('/home', function(req, res) {
 	    if (req.session.user == null){
 	// if user is not logged-in redirect back to login page //
@@ -96,7 +137,7 @@ module.exports = function(app) {
 			});
 	    }
 	});
-	
+
 	app.post('/profile', function(req, res){
 		if (req.param('user') != undefined) {
 			AM.updateAccount({
@@ -113,7 +154,7 @@ module.exports = function(app) {
 			// update the user's login cookies if they exists //
 					if (req.cookies.user != undefined && req.cookies.pass != undefined){
 						res.cookie('user', o.user, { maxAge: 900000 });
-						res.cookie('pass', o.pass, { maxAge: 900000 });	
+						res.cookie('pass', o.pass, { maxAge: 900000 });
 					}
 					res.send('ok', 200);
 				}
@@ -124,13 +165,13 @@ module.exports = function(app) {
 			req.session.destroy(function(e){ res.send('ok', 200); });
 		}
 	});
-	
+
 // creating new accounts //
-	
+
 	app.get('/signup', function(req, res) {
 		res.render('signup', {  title: 'Signup', countries : CT });
 	});
-	
+
 	app.post('/signup', function(req, res){
 		AM.addNewAccount({
 			name 	: req.param('name'),
@@ -183,7 +224,7 @@ module.exports = function(app) {
 			}
 		})
 	});
-	
+
 	app.post('/reset-password', function(req, res) {
 		var nPass = req.param('pass');
 	// retrieve the user's email from the session to lookup their account and reset password //
@@ -198,15 +239,15 @@ module.exports = function(app) {
 			}
 		})
 	});
-	
+
 // view & delete accounts //
-	
+
 	app.get('/print', function(req, res) {
 		AM.getAllRecords( function(e, accounts){
 			res.render('print', { title : 'Account List', accts : accounts });
 		})
 	});
-	
+
 	app.post('/delete', function(req, res){
 		AM.deleteAccount(req.body.id, function(e, obj){
 			if (!e){
@@ -218,13 +259,16 @@ module.exports = function(app) {
 			}
 	    });
 	});
-	
+
 	app.get('/reset', function(req, res) {
 		AM.delAllRecords(function(){
-			res.redirect('/print');	
+			res.redirect('/print');
 		});
 	});
-	
+
 	app.get('*', function(req, res) { res.render('404', { title: 'Page Not Found'}); });
 
+
 };
+
+
