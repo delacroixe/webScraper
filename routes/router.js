@@ -36,6 +36,8 @@ module.exports = function(app) {
 		item.save(obj)
 		res.redirect('/new');
 	});
+
+
 // Add new item into Data Base
 	app.get('/new', function(req, res) {
 	    if (req.session.user == null){

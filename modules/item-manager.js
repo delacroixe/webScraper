@@ -3,6 +3,10 @@
  */
 
 var db = require('mongoskin').db('localhost:27017/mydb',{safe: true});
+var io = require('socket.io-client');
+var socket = io.connect('http://localhost:4242');
+
+
 
 
 /*
@@ -26,6 +30,8 @@ exports.save = function(req, res){
     if (err) console.log(" Duplicado ! -> "+req.titulo);
     if (result){
       console.log('Added!');
+      socket.emit('additem',req)
+      // soc.senditem(req);
     }
   });
 };

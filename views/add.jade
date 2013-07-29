@@ -1,6 +1,6 @@
 #subscription-form-container
 	form( action='/additem', method="post")#subscription-form-.form-horizontal.well.span6
-		h1 Add Item
+		h1 Add Item Post
 		hr
 		#user-cg.control-group
 			label.control-label Titulo
@@ -26,6 +26,36 @@
 
 		.form-actions
 			button(type='submit')#subscription-form-btn1.btn
+
+
+#subscription-form-container
+	div.form-horizontal.well.span6
+		h1 Add Item Socket
+		hr
+		#user-cg.control-group
+			label.control-label Titulo
+			.controls
+				input#titulo.input-xlarge.disabled(type='text', name='titulo')
+			br
+			label.control-label Entrada
+			.controls
+				textarea#entrada.input-xlarge.disabled(type='text', name='entrada')
+			br
+			label.control-label Texto
+			.controls
+				textarea#texto.input-xlarge.disabled(type='text', rows='10',name='texto')
+			br
+			label.control-label Foto
+			.controls
+				input#foto.input-xlarge.disabled(type='text', name='foto')
+			br
+			label.control-label Pie de foto
+			.controls
+				input#pie.input-xlarge.disabled(type='text', name='pie')
+
+
+		.form-actions
+			button(type='button')#sendsoc.btn sendsoc
 
 // display form errors in a custom modal window //
 

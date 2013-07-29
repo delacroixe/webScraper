@@ -1,16 +1,19 @@
+
+var IM = require("./item-manager")
+
+
 module.exports = function(io) {
 	io.sockets.on('connection', function(socket){
 		console.log("Client connected");
 
-		socket.on('set_nickname', function(nickname, callback){
-			console.log('Intentando poner el nick= ' + nickname);
-
-
-
+		socket.on('additem',function(item){
+			console.log(item);
+			console.log("recivido por server");
+			socket.broadcast.emit('reciveItem', item);
 		});
 
-		socket.on('message',function(message){
-			console.log("Mensajeeee!");
+		socket.on('item',function(item){
+			console.log(item);
 		});
 
 		socket.on('disconnect',function(){
@@ -18,9 +21,6 @@ module.exports = function(io) {
 		});
 
 	});
-
-
-	var sendMessage = function(message){
-		io.sockets.emit('message', message);
-	};
 };
+
+
