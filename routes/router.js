@@ -4,12 +4,8 @@ var AM = require('../modules/account-manager');
 var EM = require('../modules/email-dispatcher');
 var IM = require('../modules/item-manager');
 var service = require('../modules/services');
-var item = require('../modules/item-manager');
 
 module.exports = function(app) {
-
-
-
 
 //angular list page
 	app.get('/itemList', function(req, res) {
@@ -23,19 +19,16 @@ module.exports = function(app) {
 	    }
 	});
 
-
-
-
-
 // Recibe los datos del formulario add
 	app.post('/additem', function(req,res){
 		var obj = req.body;
 		obj.fecha = new Date();
 
 		console.log(obj);
-		item.save(obj)
+		IM.save(obj)
 		res.redirect('/new');
 	});
+
 // Add new item into Data Base
 	app.get('/new', function(req, res) {
 	    if (req.session.user == null){
@@ -115,14 +108,31 @@ module.exports = function(app) {
 	// if user is not logged-in redirect back to login page //
 	        res.redirect('/');
 	    }   else{
-			res.render('home', {
-				title : 'Publisher Home',
-				items : IM,
-				udata : req.session.user,
-				subs: [{title:'Title 1'}, {title:'Title2'}],
-				substype: AM.getAllSubsType()
-			});
+	    	AM.getSubscriptions(null, function(e){
+	    		console.log(e);
+	    		res.render('home', {
+					title : 'Publisher Home',
+					udata : req.session.user,
+					subs: e,
+					substype: AM.getAllSubsType()
+				});
+	    	});
 	    }
+	});
+
+	app.post('/home', function(req, res) {
+		AM.addNewSubscription({
+			name 	: req.param('subname'),
+			type 	: req.param('subtype'),
+			url 	: req.param('suburl'),
+			desc	: req.param('subdesc')
+		}, function(e){
+			if (e){
+				res.send(e, 400);
+			}	else{
+				res.redirect('/home');
+			}
+		});
 	});
 
 	app.get('/profile', function(req, res) {

@@ -1,21 +1,32 @@
 
 $(document).ready(function(){
 
-	
-	$('#subs-form').ajaxForm({
+	var hc = new HomeController();
+	var sv = new SubscriptionValidator();
+
+	$('#subscription-form').ajaxForm({
 		beforeSubmit : function(formData, jqForm, options){
-			
+			if (sv.validateForm() == false){
+				return false;
+			} 	else{
+			// push the disabled username field onto the form data array //
+				return true;
+			}
 		},
 		success	: function(responseText, status, xhr, $form){
-			if (status == 'success')console.log('success');
+			console.log(status);
+			if (status == 'success') hc.onUpdateSuccess();
 		},
 		error : function(e){
-			
+			console.log(e);
 		}
 	});
 
 // customize the account settings form //
-	
+	$('#subname').hide();
+	$('#subdesc').hide();
+	$('#lsubname').hide();
+	$('#lsubdesc').hide();
 	$('#subscription-form-btn1').html('Add');
 	$('#subscription-form-btn1').addClass('btn-success');
 

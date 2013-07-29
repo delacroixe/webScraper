@@ -26,7 +26,7 @@ app.configure(function(){
   app.use(express.cookieParser());
   app.use(express.session({ secret: 'web-scraper-center' }));
   app.use(express.methodOverride());
-  app.use(require('stylus').middleware({ src: __dirname + '/app/public' }));
+  app.use(require('stylus').middleware({ src: __dirname + '/public' }));
   app.use(express.static(__dirname + '/public'));
 });
 
@@ -38,15 +38,6 @@ require('./routes/router')(app);
 
 server.listen(PORT, function (){
   console.log("working! on port "+ PORT);
-});
-
-
-app.all('/*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  res.header("Access-Control-Allow-Methods", "GET, POST","PUT");
-  next();
-
 });
 
 

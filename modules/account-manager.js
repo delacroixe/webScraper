@@ -21,7 +21,6 @@ var db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}),
 var accounts = db.collection('accounts');
 var subscriptions = db.collection('subscriptions');
 var subs_type = [
-	{short: 'tw', name: 'Twitter'},
 	{short: 'rss', name: 'RSS'}
 ];
 /* login validation methods */
@@ -117,17 +116,25 @@ exports.updatePassword = function(email, newPass, callback)
 
 exports.addNewSubscription = function(newData, callback)
 {
-	subscriptions.findOne({user:newData.user,url:newData.subs_url}, function(e, o) {
+	subscriptions.findOne({url:newData.subs_url}, function(e, o) {
 		if (o){
 			callback('subscription-registered');
 		}	else{
-			saltAndHash(newData.pass, function(hash){
-				newData.pass = hash;
+			saltAndHash(newData.url, function(hash){
 				// append date stamp when record was created //
 				newData.date = moment().format('MMMM Do YYYY, h:mm:ss a');
 				subscriptions.insert(newData, {safe: true}, callback);
 			});
 		}
+	});
+}
+
+exports.getSubscriptions = function(user, callback)
+{
+	subscriptions.find().toArray(
+		function(e, res) {
+		if (e) callback(e)
+		else callback(res)
 	});
 }
 

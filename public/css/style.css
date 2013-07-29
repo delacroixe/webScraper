@@ -140,3 +140,14 @@ label {
 button i {
   padding-left: 8px;
 }
+.subs-list li {
+  line-height: 40px;
+  list-style: none;
+}
+.subs-list .btn {
+  float: right;
+  margin-right: 40px;
+}
+.subs-list a {
+  margin-left: 20px;
+}
