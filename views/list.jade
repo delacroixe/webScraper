@@ -3,3 +3,7 @@ div(ng-app="app")
 		#subscription-form-container
 			h1 Add Item
 			hr
+			ul
+				li(ng-repeat="item in items")
+					p{{item.titulo}}
+					p{{item.entrada}}
