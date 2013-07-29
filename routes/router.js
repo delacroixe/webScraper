@@ -120,7 +120,7 @@ module.exports = function(app) {
 	    }
 	});
 
-	app.post('/home', function(req, res) {
+	app.post('/addSub', function(req, res) {
 		AM.addNewSubscription({
 			name 	: req.param('subname'),
 			type 	: req.param('subtype'),
@@ -130,7 +130,7 @@ module.exports = function(app) {
 			if (e){
 				res.send(e, 400);
 			}	else{
-				res.redirect('/home');
+				res.send('ok', 200);
 			}
 		});
 	});
