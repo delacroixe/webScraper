@@ -14,11 +14,18 @@ $(document).ready(function(){
 			}
 		},
 		success	: function(responseText, status, xhr, $form){
-			console.log(status);
-			if (status == 'success') hc.onUpdateSuccess();
+			if (status == 'success') {
+				hc.onSuccess();
+				hc.showLockedAlert('Redirecting you back to the homepage');
+			}
 		},
 		error : function(e){
-			console.log(e);
+			if (e.responseText == 'subscription-registered'){
+				 sv.showInvalidURL();
+			}
+			else{
+				console.log(e.responseText);
+			}
 		}
 	});
 
@@ -27,14 +34,13 @@ $(document).ready(function(){
 	$('#subdesc').hide();
 	$('#lsubname').hide();
 	$('#lsubdesc').hide();
-	$('#subscription-form-btn1').html('Add');
-	$('#subscription-form-btn1').addClass('btn-success');
+	$('#subscription-form-btn2').hide();
 
 // setup the confirm window that displays when the user chooses to delete their account //
 
 	$('.modal-confirm').modal({ show : false, keyboard : true, backdrop : true });
 	$('.modal-confirm .modal-header h3').text('Delete Account');
-	$('.modal-confirm .modal-body p').html('Are you sure you want to delete your account?');
+	$('.modal-confirm .modal-body p').html('Are you sure you want to delete your subscription?');
 	$('.modal-confirm .cancel').html('Cancel');
 	$('.modal-confirm .submit').html('Delete');
 	$('.modal-confirm .submit').addClass('btn-danger');

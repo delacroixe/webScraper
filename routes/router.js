@@ -123,7 +123,6 @@ module.exports = function(app) {
 	        res.redirect('/');
 	    }   else{
 	    	AM.getSubscriptions(null, function(e){
-	    		//console.log(e);
 	    		res.render('home', {
 					title : 'Publisher Home',
 					udata : req.session.user,
@@ -135,7 +134,8 @@ module.exports = function(app) {
 	});
 
 	app.post('/addSub', function(req, res) {
-		AM.addNewSubscription({
+		AM.handleSubscription({
+			id 		: req.param('subid'),
 			name 	: req.param('subname'),
 			type 	: req.param('subtype'),
 			url 	: req.param('suburl'),
@@ -143,6 +143,28 @@ module.exports = function(app) {
 		}, function(e){
 			if (e){
 				res.send(e, 400);
+			}	else{
+				res.send('ok', 200);
+			}
+		});
+	});
+
+	app.get('/getSub', function(req, res) {
+		AM.getSubscriptionById(req.param('id')
+		, function(e, o){
+			if (e){
+				res.send(e, 400);
+			}	else{
+				res.send(o);
+			}
+		});
+	});
+
+	app.get('/delSub', function(req, res) {
+		AM.deleteSubscription(req.param('id')
+		, function(e, o){
+			if (e){
+				res.send('record not found', 400);
 			}	else{
 				res.send('ok', 200);
 			}

@@ -114,19 +114,20 @@ exports.updatePassword = function(email, newPass, callback)
 	});
 }
 
-exports.addNewSubscription = function(newData, callback)
+exports.handleSubscription = function(newData, callback)
 {
-	subscriptions.findOne({url:newData.subs_url}, function(e, o) {
-		if (o){
-			callback('subscription-registered');
-		}	else{
-			saltAndHash(newData.url, function(hash){
-				// append date stamp when record was created //
-				newData.date = moment().format('MMMM Do YYYY, h:mm:ss a');
-				subscriptions.insert(newData, {safe: true}, callback);
-			});
-		}
-	});
+	if(newData.id === ''){
+		addSubscription(newData, callback);
+	}
+	else{
+		subscriptions.findOne({_id: getSubscriptionObjectId(newData.id)}, function(e, o) {
+			if (e){
+				addSubscription(newData, callback);
+			}	else{
+				updateSubscription(newData, callback);
+			}
+		});
+	}
 }
 
 exports.getSubscriptions = function(user, callback)
@@ -138,11 +139,16 @@ exports.getSubscriptions = function(user, callback)
 	});
 }
 
+exports.getSubscriptionById = function(id, callback)
+{
+	subscriptions.findOne({_id: getSubscriptionObjectId(id)}, callback);
+}
+
 /* account lookup methods */
 
 exports.deleteAccount = function(id, callback)
 {
-	accounts.remove({_id: getObjectId(id)}, callback);
+	accounts.remove({_id: getAccountObjectId(id)}, callback);
 }
 
 exports.getAccountByEmail = function(email, callback)
@@ -157,7 +163,7 @@ exports.validateResetLink = function(email, passHash, callback)
 	});
 }
 
-exports.getAllRecords = function(callback)
+exports.getAllAccountRecords = function(callback)
 {
 	accounts.find().toArray(
 		function(e, res) {
@@ -174,6 +180,11 @@ exports.delAllRecords = function(callback)
 exports.getAllSubsType = function(callback)
 {
 	return subs_type;
+}
+
+exports.deleteSubscription = function(id, callback)
+{
+	subscriptions.remove({_id: getSubscriptionObjectId(id)}, callback);
 }
 
 /* private encryption & validation methods */
@@ -208,14 +219,56 @@ var validatePassword = function(plainPass, hashedPass, callback)
 
 /* auxiliary methods */
 
-var getObjectId = function(id)
+var addSubscription = function(data, callback)
+{
+	accounts.findOne({url:data.url}, function(e, o){
+		if (o){
+			callback('subscriptions-exists');
+		}	else{	
+			data.date = moment().format('MMMM Do YYYY, h:mm:ss a');
+			subscriptions.insert(data, {safe: true}, callback);
+		}	
+	});
+}
+
+var updateSubscription = function(data, callback)
+{
+	subscriptions.findOne({_id: getSubscriptionObjectId(data.id)}, function(e, o){
+		if (e){
+			callback(e, null);
+		}	else{
+			o.name = data.name;
+			o.url = data.url;
+			o.desc = data.desc;
+			o.date = moment().format('MMMM Do YYYY, h:mm:ss a');
+	        subscriptions.save(o, {safe: true}, callback);
+		}
+	});
+}
+
+var getAccountObjectId = function(id)
 {
 	return accounts.db.bson_serializer.ObjectID.createFromHexString(id)
 }
 
-var findById = function(id, callback)
+var getSubscriptionObjectId = function(id)
 {
-	accounts.findOne({_id: getObjectId(id)},
+	if(!id || id === '') return '';
+	return subscriptions.db.bson_serializer.ObjectID.createFromHexString(id)
+}
+
+var findAccountById = function(id, callback)
+{
+	accounts.findOne({_id: getAccountObjectId(id)},
+		function(e, res) {
+		if (e) callback(e)
+		else callback(null, res)
+	});
+};
+
+var findSubscriptionById = function(id, callback)
+{
+	subscriptions.findOne({_id: getSubscriptionObjectId(id)},
 		function(e, res) {
 		if (e) callback(e)
 		else callback(null, res)

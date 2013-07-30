@@ -8,8 +8,10 @@
 				each it in subs
 					li #{it.name}
 						a(href=it.url) Link
-						a(class='btn btn-danger')
+						a(id=it._id, class='subdel btn btn-danger')
 							i(class=' icon-trash icon-white')
+						a(id=it._id, class='subedit btn btn-info')
+							i(class=' icon-edit icon-white')
 			
 		hr
 		#type-cg.control-group
@@ -30,8 +32,10 @@
 			label#lsubdesc.control-label(for='desc-tf') Description
 			.controls
 				textarea#subdesc.input-xlarge.disabled(type='text', name='subdesc', value='')
+		input#subid(type='hidden', name='subid')
 		.form-actions
-			button(type='submit')#subscription-form-btn1.btn
+			button(class='btn-success', type='submit')#subscription-form-btn1.btn Add
+			button(class='btn-default', type='button')#subscription-form-btn2.btn New
 
 // display form errors in a custom modal window //
 
