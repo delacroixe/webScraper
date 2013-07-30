@@ -7,6 +7,20 @@ var service = require('../modules/services');
 
 module.exports = function(app) {
 
+
+// noticias mas nuevas que la fecha enviada
+	app.get('/last', function(req, res) {
+	    if (req.session.user == null){
+	// if user is not logged-in redirect back to login page //
+	        res.redirect('/');
+	    }   else{
+	    	IM.last(function(c){
+	    		res.json(c);
+	    	});
+
+	    }
+	});
+
 //angular list page
 	app.get('/itemList', function(req, res) {
 	    if (req.session.user == null){
@@ -109,7 +123,7 @@ module.exports = function(app) {
 	        res.redirect('/');
 	    }   else{
 	    	AM.getSubscriptions(null, function(e){
-	    		console.log(e);
+	    		//console.log(e);
 	    		res.render('home', {
 					title : 'Publisher Home',
 					udata : req.session.user,

@@ -14,7 +14,7 @@ exports.list = function(callback){
  var list = '';
 
  var options = {
-  url : 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=-1&q=http%3A//www.theyarenews.com/servicios/rss.asp?r=651'
+  url : 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=5&q=http%3A//www.theyarenews.com/servicios/rss.asp?r=651'
  };
 
  request(options, function (error, response, body) {

@@ -26,12 +26,29 @@ exports.all = function(callback){
 };
 
 exports.save = function(req, res){
+  console.log(req);
+  req.insertData = new Date().toISOString();
   db.collection('news').insert(req , function(err, result) {
     if (err) console.log(" Duplicado ! -> "+req.titulo);
     if (result){
       console.log('Added!');
-      socket.emit('additem',req)
-      // soc.senditem(req);
+      socket.emit('additem',req);
     }
   });
 };
+
+exports.last = function(callback){
+  db.collection('news').find().sort({_id:1}).limit(20).toArray(function(err, result) {
+    if (err) throw err;
+
+    if(result.length === 0){
+     console.log("No hay resultado chic@");
+    }else{
+      callback(result);
+
+    }
+  });
+};
+
+
+

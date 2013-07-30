@@ -57,7 +57,50 @@ app.get('/list', function (req, res) {
 
 });
 
+var testURL = "http://www.tulankide.com/es/mondragon-unibertsitatea-ha-contado-con-stand-en-la-21-edicion-de-euskal-encounter";
+var AlchemyAPI = require('alchemy-api');
+var alchemy = new AlchemyAPI('74631f889f9d816cc4aae9e38dbe8d5cd4b9787b');
 
+
+alchemy.keywords(testURL, {}, function(err, response) {
+  if (err) throw err;
+
+  // See http://www.alchemyapi.com/api/ for format of returned object
+
+  var keywords = response.keywords;
+  console.log("keywords");
+  console.log(keywords);
+  //console.log(response);
+
+  // Do something with data
+});
+
+alchemy.entities(testURL, {}, function(err, response) {
+  if (err) throw err;
+
+  // See http://www.alchemyapi.com/api/ for format of returned object
+
+  var entities = response.entities;
+  console.log("entidades");
+  console.log(entities);
+  //console.log(response);
+
+  // Do something with data
+});
+
+
+alchemy.category(testURL, {}, function(err, response) {
+  if (err) throw err;
+
+  // See http://www.alchemyapi.com/api/ for format of returned object
+
+  var category = response.category;
+  console.log("category");
+  console.log(category);
+  //console.log(response);
+
+  // Do something with data
+});
 
 // Required functions
 require('./modules/io')(io);
