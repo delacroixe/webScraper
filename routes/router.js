@@ -125,7 +125,8 @@ module.exports = function(app) {
 			name 	: req.param('subname'),
 			type 	: req.param('subtype'),
 			url 	: req.param('suburl'),
-			desc	: req.param('subdesc')
+			desc	: req.param('subdesc'),
+			refr	: req.param('subref')
 		}, function(e){
 			if (e){
 				res.send(e, 400);

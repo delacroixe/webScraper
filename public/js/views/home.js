@@ -34,6 +34,8 @@ $(document).ready(function(){
 	$('#subdesc').hide();
 	$('#lsubname').hide();
 	$('#lsubdesc').hide();
+	$('#subref').hide();
+	$('#lsubref').hide();
 	$('#subscription-form-btn2').hide();
 
 // setup the confirm window that displays when the user chooses to delete their account //

@@ -38,10 +38,12 @@ function HomeController()
 			success: function(data){
 				$('#lsubname').show();
 				$('#lsubdesc').show();
+				$('#lsubref').show();
 	 			$('#subname').val(data.responseData.feed.title);
 				$('#subdesc').val(data.responseData.feed.description);
 				$('#subname').show();
 				$('#subdesc').show();
+				$('#subref').show();
 			},
 			error: function(jqXHR){
 				console.log(jqXHR.responseText+' :: '+jqXHR.statusText);
@@ -94,10 +96,13 @@ function HomeController()
 			$('#subscription-form-btn1').toggleClass('btn-warning');
 		$('#lsubname').show();
 		$('#lsubdesc').show();
+		$('#lsubref').show();
 		$('#subid').val(data._id);
 		$('#suburl').val(data.url);
 	 	$('#subname').val(data.name);
 		$('#subdesc').val(data.desc);
+		$('#subref').val(data.refr);
+		$('#subref').show();
 		$('#subname').show();
 		$('#subdesc').show();
 		$('#subscription-form-btn2').show();
@@ -112,12 +117,15 @@ function HomeController()
 			$('#subscription-form-btn1').toggleClass('btn-warning');
 		$('#lsubname').hide();
 		$('#lsubdesc').hide();
+		$('#lsubref').hide();
 		$('#subid').val('');
 		$('#suburl').val('');
 	 	$('#subname').val('');
 		$('#subdesc').val('');
+		$('#subref').val('');
 		$('#subname').hide();
 		$('#subdesc').hide();
+		$('#subref').hide();
 		$('#subscription-form-btn2').hide();
 		$('#subscription-form-btn1').show();
 

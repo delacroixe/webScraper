@@ -32,6 +32,14 @@
 			label#lsubdesc.control-label(for='desc-tf') Description
 			.controls
 				textarea#subdesc.input-xlarge.disabled(type='text', name='subdesc', value='')
+		#refesh-cg.control-group
+			label#lsubref.control-label(for='refesh-tf') Refesh Time
+			.controls
+				select#subref(name='subref')
+						option(value='5') 5
+						option(value='10') 10
+						option(value='15') 15
+						option(value='20') 20
 		input#subid(type='hidden', name='subid')
 		.form-actions
 			button(class='btn-success', type='submit')#subscription-form-btn1.btn Add

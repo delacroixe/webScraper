@@ -240,6 +240,7 @@ var updateSubscription = function(data, callback)
 			o.name = data.name;
 			o.url = data.url;
 			o.desc = data.desc;
+			o.refr = data.refr;
 			o.date = moment().format('MMMM Do YYYY, h:mm:ss a');
 	        subscriptions.save(o, {safe: true}, callback);
 		}
