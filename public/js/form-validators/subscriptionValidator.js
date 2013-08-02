@@ -42,10 +42,13 @@ function SubscriptionValidator(){
 
 }
 
-SubscriptionValidator.prototype.showInvalidURL = function()
+SubscriptionValidator.prototype.showInvalidURL = function(msg)
 {
 	this.controlGroups[1].addClass('error');
-	this.showErrors(['That url address is not ok.']);
+	if(msg === null || msg === '')
+		this.showErrors(['That url address is not ok.']);
+	else
+		this.showErrors([msg]);
 }
 
 SubscriptionValidator.prototype.validateForm = function()

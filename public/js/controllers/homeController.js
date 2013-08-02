@@ -9,7 +9,6 @@ function HomeController()
 	$('#suburl').change(function(){ that.insertURL(); });
 
 //handle sub update //
-	$('#subscription-form-btn1').click(function(){that.updateSub()});
 	$('#subscription-form-btn2').click(function(){that.emptySubForm()});
 
 // confirm sub deletion //

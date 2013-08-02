@@ -14,14 +14,14 @@ $(document).ready(function(){
 			}
 		},
 		success	: function(responseText, status, xhr, $form){
-			if (status == 'success') {
+			if (status === 'success') {
 				hc.onSuccess();
 				hc.showLockedAlert('Redirecting you back to the homepage');
 			}
 		},
 		error : function(e){
 			if (e.responseText == 'subscription-exists'){
-				 sv.showInvalidURL();
+				 sv.showInvalidURL('The subscription already exists!');
 			}
 			else{
 				console.log(e.responseText);
