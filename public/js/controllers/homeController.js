@@ -36,14 +36,17 @@ function HomeController()
 			type: 'GET',
 			dataType: 'jsonp',
 			success: function(data){
-				$('#lsubname').show();
-				$('#lsubdesc').show();
-				$('#lsubref').show();
-	 			$('#subname').val(data.responseData.feed.title);
-				$('#subdesc').val(data.responseData.feed.description);
-				$('#subname').show();
-				$('#subdesc').show();
-				$('#subref').show();
+				if(data.responseData != null){
+					$('#lsubname').show();
+					$('#lsubdesc').show();
+					$('#lsubref').show();
+		 			$('#subname').val(data.responseData.feed.title);
+					$('#subdesc').val(data.responseData.feed.description);
+					$('#subname').show();
+					$('#subdesc').show();
+					$('#subref').show();
+				}
+				else that.showInvalidRSS('The RSS URL you inserted is not valid, check it out and try again!');
 			},
 			error: function(jqXHR){
 				console.log(jqXHR.responseText+' :: '+jqXHR.statusText);
@@ -58,7 +61,7 @@ function HomeController()
 			dataType: 'jsonp',
 			data: {id: id},
 			success: function(data){
-				fillSubForm(data);
+				that.fillSubForm(data);
 			},
 			error: function(jqXHR){
 				if (jqXHR.status === 200){
@@ -129,6 +132,13 @@ function HomeController()
 		$('#subscription-form-btn2').hide();
 		$('#subscription-form-btn1').show();
 
+	}
+
+	this.showInvalidRSS = function(msg){
+		$('.modal-alert').modal({ show : false, keyboard : false, backdrop : 'static' });
+		$('.modal-alert .modal-header h3').text('Invalid RSS!');
+		$('.modal-alert .modal-body p').html(msg);
+		$('.modal-alert').modal('show');
 	}
 
 

@@ -20,7 +20,7 @@ $(document).ready(function(){
 			}
 		},
 		error : function(e){
-			if (e.responseText == 'subscription-registered'){
+			if (e.responseText == 'subscription-exists'){
 				 sv.showInvalidURL();
 			}
 			else{
