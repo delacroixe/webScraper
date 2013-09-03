@@ -3,6 +3,7 @@ var crypto 		= require('crypto');
 var MongoDB 	= require('mongoskin').Db;
 var Server 		= require('mongoskin').Server;
 var moment 		= require('moment');
+var schedule 	= require('node-schedule');
 
 var dbPort 		= 27017;
 var dbHost 		= 'localhost';
@@ -19,10 +20,7 @@ var db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}),
 	}
 });
 var accounts = db.collection('accounts');
-var subscriptions = db.collection('subscriptions');
-var subs_type = [
-	{short: 'rss', name: 'RSS'}
-];
+
 /* login validation methods */
 
 exports.autoLogin = function(user, pass, callback)
@@ -114,36 +112,6 @@ exports.updatePassword = function(email, newPass, callback)
 	});
 }
 
-exports.handleSubscription = function(newData, callback)
-{
-	if(newData.id === ''){
-		addSubscription(newData, callback);
-	}
-	else{
-		subscriptions.findOne({_id: getSubscriptionObjectId(newData.id)}, function(e, o) {
-			if (e){
-				addSubscription(newData, callback);
-			}	else{
-				updateSubscription(newData, callback);
-			}
-		});
-	}
-}
-
-exports.getSubscriptions = function(user, callback)
-{
-	subscriptions.find().toArray(
-		function(e, res) {
-		if (e) callback(e)
-		else callback(res)
-	});
-}
-
-exports.getSubscriptionById = function(id, callback)
-{
-	subscriptions.findOne({_id: getSubscriptionObjectId(id)}, callback);
-}
-
 /* account lookup methods */
 
 exports.deleteAccount = function(id, callback)
@@ -175,16 +143,6 @@ exports.getAllAccountRecords = function(callback)
 exports.delAllRecords = function(callback)
 {
 	accounts.remove({}, callback); // reset accounts collection for testing //
-}
-
-exports.getAllSubsType = function(callback)
-{
-	return subs_type;
-}
-
-exports.deleteSubscription = function(id, callback)
-{
-	subscriptions.remove({_id: getSubscriptionObjectId(id)}, callback);
 }
 
 /* private encryption & validation methods */
@@ -219,46 +177,11 @@ var validatePassword = function(plainPass, hashedPass, callback)
 
 /* auxiliary methods */
 
-var addSubscription = function(data, callback)
-{
-	subscriptions.findOne({url:data.url}, function(e, o){
-		console.log(e);
-		console.log(o);
-		if (o){
-			callback('subscription-exists');
-		}	else{	
-			data.date = moment().format('MMMM Do YYYY, h:mm:ss a');
-			subscriptions.insert(data, {safe: true}, callback);
-		}	
-	});
-}
-
-var updateSubscription = function(data, callback)
-{
-	subscriptions.findOne({_id: getSubscriptionObjectId(data.id)}, function(e, o){
-		if (e){
-			callback(e, null);
-		}	else{
-			o.name = data.name;
-			o.url = data.url;
-			o.desc = data.desc;
-			o.refr = data.refr;
-			o.date = moment().format('MMMM Do YYYY, h:mm:ss a');
-	        subscriptions.save(o, {safe: true}, callback);
-		}
-	});
-}
-
 var getAccountObjectId = function(id)
 {
 	return accounts.db.bson_serializer.ObjectID.createFromHexString(id)
 }
 
-var getSubscriptionObjectId = function(id)
-{
-	if(!id || id === '') return '';
-	return subscriptions.db.bson_serializer.ObjectID.createFromHexString(id)
-}
 
 var findAccountById = function(id, callback)
 {
@@ -268,16 +191,6 @@ var findAccountById = function(id, callback)
 		else callback(null, res)
 	});
 };
-
-var findSubscriptionById = function(id, callback)
-{
-	subscriptions.findOne({_id: getSubscriptionObjectId(id)},
-		function(e, res) {
-		if (e) callback(e)
-		else callback(null, res)
-	});
-};
-
 
 var findByMultipleFields = function(a, callback)
 {
