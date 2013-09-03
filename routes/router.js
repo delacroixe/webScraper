@@ -10,8 +10,11 @@ module.exports = exports = function(app, db) {
 
 	var itemHandler = new ItemHandler(db);
 
+	app.get('/todas', itemHandler.showAll);
+	app.get('/guarda', itemHandler.saveOne);
 
-	app.get('todas', itemHandler.showAll)
+
+
 
 
 //Una ruta que devuelve ese String

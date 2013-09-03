@@ -7,6 +7,7 @@
 // var socket = io.connect('http://localhost:4242');
 
 
+
 function ItemDAO(db) {
   "use strict";
 
@@ -29,17 +30,20 @@ function ItemDAO(db) {
     });
   }
 
-  // this.save = function(req, res){
-  //   console.log(req);
-  //   req.insertData = new Date().toISOString();
-  //   db.collection('news').insert(req , function(err, result) {
-  //     if (err) console.log(" Duplicado ! -> "+req.titulo);
-  //     if (result){
-  //       console.log('Added!');
-  //       //socket.emit('additem',req);
-  //     }
-  //   });
-  // };
+  this.save = function(data, callback){
+
+    data.insertData = new Date().toISOString();
+    db.collection('news').insert(data , function(err, result) {
+      //if (err) console.log(" Duplicado ! -> "+data.titulo);
+      if (err) return callback(err, null);
+
+      if (result){
+        console.log('Added!');
+        callback(err, result);
+        //socket.emit('additem',req);
+      }
+    });
+  };
 
   // this.last = function(callback){
   //   db.collection('news').find().sort({_id:1}).limit(20).toArray(function(err, result) {
