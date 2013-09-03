@@ -2,11 +2,33 @@
 var CT = require('../modules/country-list');
 var AM = require('../modules/account-manager');
 var EM = require('../modules/email-dispatcher');
-var IM = require('../modules/item-manager');
 var service = require('../modules/services');
 
-module.exports = function(app) {
+var ItemHandler = require('../modules/item');
 
+module.exports = exports = function(app, db) {
+
+	var itemHandler = new ItemHandler(db);
+
+
+	app.get('todas', itemHandler.showAll)
+
+
+//Una ruta que devuelve ese String
+	app.get('/noticias', function (req, res) {
+	  crud.all(function(obj){
+	    res.json(obj);
+	  });
+	});
+
+// Llama al RSS y por cada link extra el la noticia y la guarda
+	app.get('/list', function (req, res) {
+	  service.list(function(c){
+	    //console.log(c);
+	    res.send(c);
+	  });
+
+	});
 
 // noticias mas nuevas que la fecha enviada
 	app.get('/last', function(req, res) {

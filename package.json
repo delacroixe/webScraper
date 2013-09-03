@@ -12,7 +12,7 @@
     "cheerio": "*",
     "socket.io": "*",
     "socket.io-client": "*",
-    "mongoskin": "*",
+    "mongodb": "*",
     "moment" : "*",
     "emailjs": "*",
     "alchemy-api": "*"
