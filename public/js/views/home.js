@@ -14,14 +14,14 @@ $(document).ready(function(){
 			}
 		},
 		success	: function(responseText, status, xhr, $form){
-			if (status == 'success') {
+			if (status === 'success') {
 				hc.onSuccess();
 				hc.showLockedAlert('Redirecting you back to the homepage');
 			}
 		},
 		error : function(e){
-			if (e.responseText == 'subscription-registered'){
-				 sv.showInvalidURL();
+			if (e.responseText == 'subscription-exists'){
+				 sv.showInvalidURL('The subscription already exists!');
 			}
 			else{
 				console.log(e.responseText);
@@ -34,6 +34,8 @@ $(document).ready(function(){
 	$('#subdesc').hide();
 	$('#lsubname').hide();
 	$('#lsubdesc').hide();
+	$('#subref').hide();
+	$('#lsubref').hide();
 	$('#subscription-form-btn2').hide();
 
 // setup the confirm window that displays when the user chooses to delete their account //

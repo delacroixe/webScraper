@@ -221,9 +221,11 @@ var validatePassword = function(plainPass, hashedPass, callback)
 
 var addSubscription = function(data, callback)
 {
-	accounts.findOne({url:data.url}, function(e, o){
+	subscriptions.findOne({url:data.url}, function(e, o){
+		console.log(e);
+		console.log(o);
 		if (o){
-			callback('subscriptions-exists');
+			callback('subscription-exists');
 		}	else{	
 			data.date = moment().format('MMMM Do YYYY, h:mm:ss a');
 			subscriptions.insert(data, {safe: true}, callback);
@@ -240,6 +242,7 @@ var updateSubscription = function(data, callback)
 			o.name = data.name;
 			o.url = data.url;
 			o.desc = data.desc;
+			o.refr = data.refr;
 			o.date = moment().format('MMMM Do YYYY, h:mm:ss a');
 	        subscriptions.save(o, {safe: true}, callback);
 		}

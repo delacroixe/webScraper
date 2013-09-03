@@ -3,8 +3,8 @@ function SubscriptionValidator(){
 
 // build array maps of the form inputs & control groups //
 
-	this.formFields = [$('#substype'), $('#suburl'), $('#subname'), $('#subdesc')];
-	this.controlGroups = [$('#type-cg'), $('#url-cg'), $('#name-cg'), $('#desc-cg')];
+	this.formFields = [$('#substype'), $('#suburl'), $('#subname'), $('#subdesc'), $('#subref')];
+	this.controlGroups = [$('#type-cg'), $('#url-cg'), $('#name-cg'), $('#desc-cg'), $('#refresh-cg')];
 	
 // bind the form-error modal window to this controller to display any errors //
 	
@@ -19,6 +19,11 @@ function SubscriptionValidator(){
 	this.validateType = function(s)
 	{
 		return s.length >= 2;
+	}
+
+	this.validateRefresh = function(s)
+	{
+		return s.length >= 1;
 	}
 	
 	this.validateName = function(s)
@@ -37,10 +42,13 @@ function SubscriptionValidator(){
 
 }
 
-SubscriptionValidator.prototype.showInvalidURL = function()
+SubscriptionValidator.prototype.showInvalidURL = function(msg)
 {
 	this.controlGroups[1].addClass('error');
-	this.showErrors(['That url address is not ok.']);
+	if(msg === null || msg === '')
+		this.showErrors(['That url address is not ok.']);
+	else
+		this.showErrors([msg]);
 }
 
 SubscriptionValidator.prototype.validateForm = function()
@@ -55,6 +63,9 @@ SubscriptionValidator.prototype.validateForm = function()
 	}
 	if (this.validateName(this.formFields[2].val()) == false) {
 		this.controlGroups[2].addClass('error'); e.push('Please Enter a Name');
+	}
+	if (this.validateRefresh(this.formFields[3].val()) == false) {
+		this.controlGroups[3].addClass('error'); e.push('Please Enter a Refresh Time');
 	}
 	if (e.length) this.showErrors(e);
 	return e.length === 0;
