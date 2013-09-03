@@ -1,11 +1,45 @@
 
 var CT = require('../modules/country-list');
-var AM = require('../modules/account-manager');
 var EM = require('../modules/email-dispatcher');
-var IM = require('../modules/item-manager');
 var service = require('../modules/services');
+var AccountHandler = require('../modules/accountHandler');
+var SubscriptionHandler = require('../modules/subscriptionHandler');
+var ItemHandler = require('../modules/item');
 
-module.exports = function(app) {
+module.exports = function(app, db) {
+
+	var accountHandler = new AccountHandler(db);
+	var subscriptionHandler = new SubscriptionHandler(db);
+	var itemHandler = new ItemHandler(db);
+
+//Una ruta que devuelve ese String
+	app.get('/noticias', function (req, res) {
+	  itemHandler.displayAll(req, res, function(obj){
+	    res.json(obj);
+	  });
+	});
+
+// Llama al RSS y por cada link extra el la noticia y la guarda
+	app.get('/list', function (req, res) {
+	  service.list(function(c){
+	    //console.log(c);
+	    res.send(c);
+	  });
+
+	});
+
+// noticias mas nuevas que la fecha enviada
+	app.get('/last', function(req, res) {
+	    if (req.session.user == null){
+	// if user is not logged-in redirect back to login page //
+	        res.redirect('/');
+	    }   else{
+	    	IM.last(function(c){
+	    		res.json(c);
+	    	});
+
+	    }
+	});
 
 //angular list page
 	app.get('/itemList', function(req, res) {
@@ -75,7 +109,7 @@ module.exports = function(app) {
 			res.render('login', { title: 'Hello - Please Login To Your Account' });
 		}	else{
 	// attempt automatic login //
-			AM.autoLogin(req.cookies.user, req.cookies.pass, function(o){
+			accountHandler.autoLogin(req.cookies.user, req.cookies.pass, function(o){
 				if (o != null){
 				    req.session.user = o;
 					res.redirect('/home');
@@ -87,7 +121,7 @@ module.exports = function(app) {
 	});
 
 	app.post('/', function(req, res){
-		AM.manualLogin(req.param('user'), req.param('pass'), function(e, o){
+		accountHandler.manualLogin(req.param('user'), req.param('pass'), function(e, o){
 			if (!o){
 				res.send(e, 400);
 			}	else{
@@ -108,19 +142,19 @@ module.exports = function(app) {
 	// if user is not logged-in redirect back to login page //
 	        res.redirect('/');
 	    }   else{
-	    	AM.getSubscriptions(null, function(e){
+	    	subscriptionHandler.getSubscriptions(null, function(e){
 	    		res.render('home', {
 					title : 'Publisher Home',
 					udata : req.session.user,
 					subs: e,
-					substype: AM.getAllSubsType()
+					substype: subscriptionHandler.getAllSubsType()
 				});
 	    	});
 	    }
 	});
 
 	app.post('/addSub', function(req, res) {
-		AM.handleSubscription({
+		subscriptionHandler.handleSubscription({
 			id 		: req.param('subid'),
 			name 	: req.param('subname'),
 			type 	: req.param('subtype'),
@@ -137,7 +171,7 @@ module.exports = function(app) {
 	});
 
 	app.get('/getSub', function(req, res) {
-		AM.getSubscriptionById(req.param('id')
+		subscriptionHandler.getSubscriptionById(req.param('id')
 		, function(e, o){
 			if (e){
 				res.send(e, 400);
@@ -148,7 +182,7 @@ module.exports = function(app) {
 	});
 
 	app.get('/delSub', function(req, res) {
-		AM.deleteSubscription(req.param('id')
+		subscriptionHandler.deleteSubscription(req.param('id')
 		, function(e, o){
 			if (e){
 				res.send('record not found', 400);
@@ -173,7 +207,7 @@ module.exports = function(app) {
 
 	app.post('/profile', function(req, res){
 		if (req.param('user') != undefined) {
-			AM.updateAccount({
+			accountHandler.updateAccount({
 				user 		: req.param('user'),
 				name 		: req.param('name'),
 				email 		: req.param('email'),
@@ -210,7 +244,7 @@ module.exports = function(app) {
 	});
 
 	app.post('/signup', function(req, res){
-		AM.addNewAccount({
+		accountHandler.addNewAccount({
 			name 	: req.param('name'),
 			email 	: req.param('email'),
 			user 	: req.param('user'),
@@ -229,7 +263,7 @@ module.exports = function(app) {
 
 	app.post('/lost-password', function(req, res){
 	// look up the user's account via their email //
-		AM.getAccountByEmail(req.param('email'), function(o){
+		accountHandler.getAccountByEmail(req.param('email'), function(o){
 			if (o){
 				res.send('ok', 200);
 				EM.dispatchResetPasswordLink(o, function(e, m){
@@ -251,7 +285,7 @@ module.exports = function(app) {
 	app.get('/reset-password', function(req, res) {
 		var email = req.query["e"];
 		var passH = req.query["p"];
-		AM.validateResetLink(email, passH, function(e){
+		accountHandler.validateResetLink(email, passH, function(e){
 			if (e != 'ok'){
 				res.redirect('/');
 			} else{
@@ -268,7 +302,7 @@ module.exports = function(app) {
 		var email = req.session.reset.email;
 	// destory the session immediately after retrieving the stored email //
 		req.session.destroy();
-		AM.updatePassword(email, nPass, function(e, o){
+		accountHandler.updatePassword(email, nPass, function(e, o){
 			if (o){
 				res.send('ok', 200);
 			}	else{
@@ -280,13 +314,13 @@ module.exports = function(app) {
 // view & delete accounts //
 
 	app.get('/print', function(req, res) {
-		AM.getAllRecords( function(e, accounts){
+		accountHandler.getAllRecords( function(e, accounts){
 			res.render('print', { title : 'Account List', accts : accounts });
 		})
 	});
 
 	app.post('/delete', function(req, res){
-		AM.deleteAccount(req.body.id, function(e, obj){
+		accountHandler.deleteAccount(req.body.id, function(e, obj){
 			if (!e){
 				res.clearCookie('user');
 				res.clearCookie('pass');
@@ -298,7 +332,7 @@ module.exports = function(app) {
 	});
 
 	app.get('/reset', function(req, res) {
-		AM.delAllRecords(function(){
+		accountHandler.delAllRecords(function(){
 			res.redirect('/print');
 		});
 	});

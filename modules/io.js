@@ -1,5 +1,4 @@
 
-var IM = require("./item-manager")
 
 
 module.exports = function(io) {

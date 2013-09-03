@@ -1,7 +1,7 @@
 
 
 var cheerio = require('cheerio');
-var IM = require('./item-manager');
+
 
 exports.scrap = function(body){
 

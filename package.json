@@ -12,9 +12,10 @@
     "cheerio": "*",
     "socket.io": "*",
     "socket.io-client": "*",
-    "mongoskin": "*",
+    "mongodb": "*",
     "moment" : "*",
     "emailjs": "*",
-    "node-schedule" : "*"
+    "node-schedule" : "*",
+    "alchemy-api": "*"
   }
 }
