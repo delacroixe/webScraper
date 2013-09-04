@@ -13,7 +13,7 @@ var app = express();
 var http = require('http');
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
-
+var CronAPI = require('./modules/cronAPI');
 
 io.set('log level', 1);
 
@@ -41,13 +41,16 @@ MongoClient.connect('mongodb://localhost:27017/scraperdb', function(err, db) {
     });
 
     //require('./routes/router')(app);
-    routes(app, db);
+    var ch = new CronAPI(db);
+    ch.initCrons(function(err){
+      if(err) console.log('Error initing crons...' + e);
+    });
+    routes(app, db, ch);
 
     server.listen(PORT, function (){
       console.log("working! on port "+ PORT);
     });
 });
-
 
 // Required functions
 require('./modules/io')(io);

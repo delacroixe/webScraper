@@ -5,8 +5,12 @@ function HomeController()
 	var that = this;
 	var subid = '';
 
+
+// handle user logout //
+	$('#btn-logout').click(function(){ that.attemptLogout(); });
+
 // handle adding url //
-	$('#suburl').change(function(){ that.insertURL(); });
+	$('#suburl').keyup(function(){ that.insertURL(); });
 
 //handle sub update //
 	$('#subscription-form-btn2').click(function(){that.emptySubForm()});
@@ -44,6 +48,7 @@ function HomeController()
 					$('#subname').show();
 					$('#subdesc').show();
 					$('#subref').show();
+					$('#url-cg').removeClass('control-group error');
 				}
 				else that.showInvalidRSS('The RSS URL you inserted is not valid, check it out and try again!');
 			},
@@ -134,10 +139,29 @@ function HomeController()
 	}
 
 	this.showInvalidRSS = function(msg){
+		/*
 		$('.modal-alert').modal({ show : false, keyboard : false, backdrop : 'static' });
 		$('.modal-alert .modal-header h3').text('Invalid RSS!');
 		$('.modal-alert .modal-body p').html(msg);
 		$('.modal-alert').modal('show');
+		*/
+		$('#url-cg').addClass('control-group error');
+	}
+
+	this.attemptLogout = function()
+	{
+		var that = this;
+		$.ajax({
+			url: "/logout",
+			type: "POST",
+			data: {logout : true},
+			success: function(data){
+	 			that.showLockedAlert('You are now logged out.<br>Redirecting you back to the homepage.');
+			},
+			error: function(jqXHR){
+				console.log(jqXHR.responseText+' :: '+jqXHR.statusText);
+			}
+		});
 	}
 
 

@@ -15,6 +15,7 @@
     "mongodb": "*",
     "moment" : "*",
     "emailjs": "*",
+    "node-schedule" : "*",
     "alchemy-api": "*"
   }
 }

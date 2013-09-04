@@ -38,7 +38,6 @@ function ItemDAO(db) {
       if (err) return callback(err, null);
 
       if (result){
-        console.log('Added!');
         callback(err, result);
         //socket.emit('additem',req);
       }
@@ -58,7 +57,7 @@ function ItemDAO(db) {
   //   });
   // };
 
-}
+};
 
 module.exports.ItemDAO = ItemDAO;
 
