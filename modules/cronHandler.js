@@ -51,7 +51,6 @@ function CronHandler(db) {
 	};
 
 	this.deleteCron = function(sub_id, callback) {
-		console.log(sub_id);
 		if(sub_id) {
 			if(crons["'"+sub_id+"'"] != undefined) {
 				console.log("Deleting cron... "+sub_id);
