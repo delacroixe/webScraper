@@ -4,14 +4,12 @@
 var moment 		= require('moment');
 var CronHandler = require('./cronHandler');
 
-function SubscriptionHanlder(db){
+function SubscriptionHanlder(db, ch){
 	"user strict";
 
 	var subs_type = [
 		{short: 'rss', name: 'RSS'}
 	];
-
-	var cronHandler = new CronHandler();
 
 	var that = this;
 
@@ -43,7 +41,14 @@ function SubscriptionHanlder(db){
 	}
 
 	this.deleteSubscription = function(id, callback) {
-		db.collection('subscriptions').remove({_id: getSubscriptionObjectId(id)}, callback);
+		var sid = getSubscriptionObjectId(id);
+		db.collection('subscriptions').remove({_id: sid}, function(err, result){
+			if(err){
+				callback(e);
+			}
+			else
+				ch.deleteCron(sid, callback);
+			});
 	}
 
 	this.getAllSubsType = function(callback) {
@@ -62,7 +67,7 @@ function SubscriptionHanlder(db){
 						callback(e);
 					}
 					else
-						cronHandler.handleCron(result[0], callback);
+						ch.handleCron(result[0], callback);
 				});
 			}	
 		});
@@ -83,7 +88,7 @@ function SubscriptionHanlder(db){
 						callback(e);
 					}
 					else
-						cronHandler.handleCron(result[0], callback);
+						ch.handleCron(o, callback);
 				});
 			}
 		});

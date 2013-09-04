@@ -6,11 +6,15 @@ var AccountHandler = require('../modules/accountHandler');
 var SubscriptionHandler = require('../modules/subscriptionHandler');
 var ItemHandler = require('../modules/item');
 
-module.exports = function(app, db) {
+module.exports = function(app, db, ch) {
 
 	var accountHandler = new AccountHandler(db);
-	var subscriptionHandler = new SubscriptionHandler(db);
+	var subscriptionHandler = new SubscriptionHandler(db, ch);
 	var itemHandler = new ItemHandler(db);
+
+//Llamadas para testeo
+	app.get('/todas', itemHandler.showAll);
+	app.get('/guarda', itemHandler.saveOne);
 
 //Una ruta que devuelve ese String
 	app.get('/noticias', function (req, res) {
@@ -155,7 +159,7 @@ module.exports = function(app, db) {
 
 	app.post('/addSub', function(req, res) {
 		subscriptionHandler.handleSubscription({
-			id 		: req.param('subid'),
+			id		: req.param('subid'),
 			name 	: req.param('subname'),
 			type 	: req.param('subtype'),
 			url 	: req.param('suburl'),
