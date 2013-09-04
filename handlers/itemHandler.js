@@ -1,6 +1,6 @@
-var ItemDAO = require('./itemDAO').ItemDAO;
+var ItemDAO = require('../DAO/itemDAO').ItemDAO;
 
-var AlchemyAPI = require('./alchemyAPI').alchemyAPI;
+var AlchemyAPI = require('../modules/alchemyAPI').alchemyAPI;
 
 
 function ItemHandler (db) {

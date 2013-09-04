@@ -3,7 +3,7 @@
  */
 var schedule 	= require('node-schedule');
 var request 	= require('request');
-var ItemHandler = require('./item');
+var ItemHandler = require('../handlers/itemHandler');
 
 function CronHandler(db) {
 	"user strict";

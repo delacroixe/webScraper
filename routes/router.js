@@ -2,9 +2,9 @@
 var CT = require('../modules/country-list');
 var EM = require('../modules/email-dispatcher');
 var service = require('../modules/services');
-var AccountHandler = require('../modules/accountHandler');
-var SubscriptionHandler = require('../modules/subscriptionHandler');
-var ItemHandler = require('../modules/item');
+var AccountHandler = require('../handlers/accountHandler');
+var SubscriptionHandler = require('../handlers/subscriptionHandler');
+var ItemHandler = require('../handlers/itemHandler');
 
 module.exports = function(app, db, ch) {
 

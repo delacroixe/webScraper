@@ -2,7 +2,6 @@
  * Subscriptions Handler
  */
 var moment 		= require('moment');
-var CronHandler = require('./cronHandler');
 
 function SubscriptionHanlder(db, ch){
 	"user strict";
