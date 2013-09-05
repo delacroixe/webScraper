@@ -4,14 +4,16 @@
 
 var crypto 		= require('crypto');
 var moment 		= require('moment');
+var AccountDAO = require('../DAO/accountDAO');
 
  function AccountHandler(db) {
  	"user strict";
 
- 	//var that = this;
+ 	var accountDAO = new AccountDAO(db);
+ 	var that = this;
 
  	this.autoLogin = function(user, pass, callback) {
-		db.collection('accounts').findOne({user:user}, function(e, o) {
+		accountDAO.getByUser(user, function(e, o) {
 			if (o){
 				o.pass == pass ? callback(o) : callback(null);
 			}	else{
@@ -21,7 +23,7 @@ var moment 		= require('moment');
 	}
 
 	this.manualLogin = function(user, pass, callback) {
-		db.collection('accounts').findOne({user:user}, function(e, o) {
+		accountDAO.getByUser(user, function(e, o) {
 			if (o == null){
 				callback('user-not-found');
 			}	else{
@@ -39,19 +41,18 @@ var moment 		= require('moment');
 	/* record insertion, update & deletion methods */
 
 	this.addNewAccount = function(newData, callback) {
-		db.collection('accounts').findOne({user:newData.user}, function(e, o) {
+		accountDAO.getByUser(newData.user, function(e, o) {
 			if (o){
 				callback('username-taken');
 			}	else{
-				db.collection('accounts').findOne({email:newData.email}, function(e, o) {
+				accountDAO.getByEmail(newData.email, function(e, o) {
 					if (o){
 						callback('email-taken');
 					}	else{
 						saltAndHash(newData.pass, function(hash){
 							newData.pass = hash;
 						// append date stamp when record was created //
-							newData.date = moment().format('MMMM Do YYYY, h:mm:ss a');
-							db.collection('accounts').insert(newData, {safe: true}, callback);
+							accountDAO.add(newData, callback);
 						});
 					}
 				});
@@ -60,19 +61,19 @@ var moment 		= require('moment');
 	}
 
 	this.updateAccount = function(newData, callback) {
-		db.collection('accounts').findOne({user:newData.user}, function(e, o){
+		accountDAO.getByUser(newData.user, function(e, o){
 			o.name 		= newData.name;
 			o.email 	= newData.email;
 			o.country 	= newData.country;
 			if (newData.pass == ''){
-				db.collection('accounts').save(o, {safe: true}, function(err) {
+				accountDAO.update(o, function(err) {
 					if (err) callback(err);
 					else callback(null, o);
 				});
 			}	else{
 				saltAndHash(newData.pass, function(hash){
 					o.pass = hash;
-					db.collection('accounts').save(o, {safe: true}, function(err) {
+					accountDAO.update(o, function(err) {
 						if (err) callback(err);
 						else callback(null, o);
 					});
@@ -82,13 +83,13 @@ var moment 		= require('moment');
 	}
 
 	this.updatePassword = function(email, newPass, callback) {
-		db.collection('accounts').findOne({email:email}, function(e, o){
+		accountDAO.getByEmail(email, function(e, o){
 			if (e){
 				callback(e, null);
 			}	else{
 				saltAndHash(newPass, function(hash){
 			        o.pass = hash;
-			        db.collection('accounts').save(o, {safe: true}, callback);
+			        accountDAO.update(o, callback);
 				});
 			}
 		});
@@ -97,29 +98,14 @@ var moment 		= require('moment');
 	/* account lookup methods */
 
 	this.deleteAccount = function(id, callback) {
-		db.collection('accounts').remove({_id: getAccountObjectId(id)}, callback);
+		accountDAO.delete(id, callback);
 	}
 
-	this.getAccountByEmail = function(email, callback) {
-		db.collection('accounts').findOne({email:email}, function(e, o){ callback(o); });
-	}
 
 	this.validateResetLink = function(email, passHash, callback) {
-		db.collection('accounts').find({ $and: [{email:email, pass:passHash}] }, function(e, o){
+		accountDAO.getByMultipleFields({email:email, pass:passHash}, function(e, o){
 			callback(o ? 'ok' : null);
 		});
-	}
-
-	this.getAllAccountRecords = function(callback) {
-		db.collection('accounts').find().toArray(
-			function(e, res) {
-			if (e) callback(e)
-			else callback(null, res)
-		});
-	};
-
-	this.delAllRecords = function(callback) {
-		db.collection('accounts').remove({}, callback); // reset db.collection('accounts') collection for testing //
 	}
 
 	/* private encryption & validation methods */
