@@ -84,9 +84,7 @@ function CronHandler(db) {
 		      		'def_cat' : item.categories,
 		      	};
 
-		      	itemHandler.saveOne(data, function(e){
-		      		if(e) console.log('Cannot save the current item...' + e);
-		      	});
+		      	itemHandler.saveOne(data, function(e){});
 
 		      });
 		    }

@@ -6,8 +6,6 @@
 // var io = require('socket.io-client');
 // var socket = io.connect('http://localhost:4242');
 
-
-
 function ItemDAO(db) {
   "use strict";
 
@@ -33,7 +31,7 @@ function ItemDAO(db) {
   this.save = function(data, callback){
 
     data.insertData = new Date().toISOString();
-    db.collection('news').findOne({url: data.url}, function(e, o) {
+    db.collection('news').findOne({link: data.link}, function(e, o) {
       if(o) {
         callback('error-new-exists')
       }

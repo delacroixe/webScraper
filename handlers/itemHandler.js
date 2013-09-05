@@ -5,12 +5,12 @@ var AlchemyAPI = require('../modules/alchemyAPI').alchemyAPI;
 
 function ItemHandler (db) {
 
-	var item = new ItemDAO(db);
+	var itemDAO = new ItemDAO(db);
 	var alchemy = new AlchemyAPI();
 
 	this.showAll = function(req, res, next) {
 
-		item.all(function(err, results) {
+		itemDAO.all(function(err, results) {
 
 			if (err) return next(err);
 			return res.send(results);
@@ -21,8 +21,11 @@ function ItemHandler (db) {
 
 		alchemy.category(obj.url, function(data){
 			obj.cat = data;
-			item.save(obj, function(err, results) {
-				if (!err) callback('New item saved: '+obj.url);
+			itemDAO.save(obj, function(err, results) {
+				if (err) callback(err);
+				else {
+					console.log('New item saved: '+obj.link);	
+				}
 			});
 		});
 	};
