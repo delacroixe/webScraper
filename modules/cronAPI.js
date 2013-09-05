@@ -85,7 +85,7 @@ function CronHandler(db) {
 		      	};
 
 		      	itemHandler.saveOne(data, function(e){
-		      		if(e) console.log('Cannot save the current item...' + data.titulo);
+		      		if(e) console.log('Cannot save the current item...' + e);
 		      	});
 
 		      });

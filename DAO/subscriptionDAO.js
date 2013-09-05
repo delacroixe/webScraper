@@ -33,8 +33,8 @@ function SubscriptionDAO(db) {
   };
 
   this.add = function (data, callback) {
-  	data.date = moment().format('MMMM Do YYYY, h:mm:ss a');		
-	db.collection('subscriptions').insert(data, {safe: true}, callback);
+    data.date = moment().format('MMMM Do YYYY, h:mm:ss a');		
+	  db.collection('subscriptions').insert(data, {safe: true}, callback);
   };
 
   this.update = function (data, callback) {

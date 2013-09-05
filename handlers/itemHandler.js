@@ -22,7 +22,7 @@ function ItemHandler (db) {
 		alchemy.category(obj.url, function(data){
 			obj.cat = data;
 			item.save(obj, function(err, results) {
-				if (err) callback('Errorea itema gordetzean');
+				if (!err) callback('New item saved: '+obj.url);
 			});
 		});
 	};

@@ -33,13 +33,19 @@ function ItemDAO(db) {
   this.save = function(data, callback){
 
     data.insertData = new Date().toISOString();
-    db.collection('news').insert(data , function(err, result) {
-      //if (err) console.log(" Duplicado ! -> "+data.titulo);
-      if (err) return callback(err, null);
-
-      if (result){
-        callback(err, result);
-        //socket.emit('additem',req);
+    db.collection('news').findOne({url: data.url}, function(e, o) {
+      if(o) {
+        callback('error-new-exists')
+      }
+      else{
+        db.collection('news').insert(data , function(err, result) {
+          //if (err) console.log(" Duplicado ! -> "+data.titulo);
+          if (err) return callback(err, null);
+          if (result){
+            callback(err, result);
+            //socket.emit('additem',req);
+          }
+        });
       }
     });
   };

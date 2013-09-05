@@ -12,16 +12,9 @@ module.exports = function(app, db, ch) {
 	var subscriptionHandler = new SubscriptionHandler(db, ch);
 	var itemHandler = new ItemHandler(db);
 
+/*
 //Llamadas para testeo
 	app.get('/todas', itemHandler.showAll);
-	app.get('/guarda', itemHandler.saveOne);
-
-//Una ruta que devuelve ese String
-	app.get('/noticias', function (req, res) {
-	  itemHandler.displayAll(req, res, function(obj){
-	    res.json(obj);
-	  });
-	});
 
 // Llama al RSS y por cada link extra el la noticia y la guarda
 	app.get('/list', function (req, res) {
@@ -67,6 +60,17 @@ module.exports = function(app, db, ch) {
 		res.redirect('/new');
 	});
 
+// Llama al RSS y por cada link extra el la noticia y la guarda
+
+	app.get('/list', function (req, res) {
+	  service.list(function(c){
+	    //console.log(c);
+	    res.send(c);
+	  });
+
+	});
+*/
+
 // Add new item into Data Base
 	app.get('/new', function(req, res) {
 	    if (req.session.user == null){
@@ -87,23 +91,7 @@ module.exports = function(app, db, ch) {
 		next();
 	});
 
-//Una ruta que devuelve ese String
 
-	app.get('/noticias', function (req, res) {
-	  IM.all(function(obj){
-	    res.json(obj);
-	  });
-	});
-
-// Llama al RSS y por cada link extra el la noticia y la guarda
-
-	app.get('/list', function (req, res) {
-	  service.list(function(c){
-	    //console.log(c);
-	    res.send(c);
-	  });
-
-	});
 
 // main login page //
 
@@ -137,6 +125,14 @@ module.exports = function(app, db, ch) {
 				res.send(o, 200);
 			}
 		});
+	});
+
+//Una ruta que devuelve ese String
+
+	app.get('/news', function (req, res) {
+	  itemHandler.showAll(req, res, function(obj){
+	    res.json(obj);
+	  });
 	});
 
 // logged-in user homepage //
