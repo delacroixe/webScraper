@@ -36,14 +36,14 @@ function CronHandler(db) {
 			if(crons["'"+subscription._id+"'"] === undefined){
 				console.log('Creating cron...' + subscription._id);
 				crons["'"+subscription._id+"'"] = schedule.scheduleJob('*/'+subscription.refr+' * * * *', function(){
-					refreshSubscription(subscription);
+					that.refreshSubscription(subscription);
 				});				
 				callback();
 			}
 			else{
 				(crons["'"+subscription._id+"'"]).cancel();
 				crons["'"+subscription._id+"'"] = undefined;
-				this.handleCron(subscription, callback);
+				that.handleCron(subscription, callback);
 			}
 		}
 		else
@@ -64,7 +64,7 @@ function CronHandler(db) {
 		}
 	};
 	
-	var refreshSubscription = function(subscription) {
+	this.refreshSubscription = function(subscription) {
 		console.log('Updating... ' + subscription._id);
 		var options = {
 			url: base_url + subscription.url

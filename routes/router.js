@@ -196,6 +196,18 @@ module.exports = function(app, db, ch) {
 		});
 	});
 
+	app.get('/refSub', function(req, res) {
+		subscriptionHandler.getSubscriptionById(req.param('id')
+		, function(e, o){
+			if (e){
+				res.send('record not found', 400);
+			}	else{
+				ch.refreshSubscription(o);
+				res.send('ok', 200);
+			}
+		});
+	});
+
 	app.get('/profile', function(req, res) {
 	    if (req.session.user == null){
 	// if user is not logged-in redirect back to login page //

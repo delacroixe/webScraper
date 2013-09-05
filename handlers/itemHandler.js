@@ -19,8 +19,7 @@ function ItemHandler (db) {
 
 	this.saveOne = function(obj, callback) {
 
-		var testURL = obj.link;
-		alchemy.category(testURL, function(data){
+		alchemy.category(obj.url, function(data){
 			obj.cat = data;
 			item.save(obj, function(err, results) {
 				if (err) callback('Errorea itema gordetzean');

@@ -15,7 +15,7 @@ $(document).ready(function(){
 		},
 		success	: function(responseText, status, xhr, $form){
 			if (status === 'success') {
-				hc.onSuccess();
+				hc.onSuccess('Success!','A subscription has been handled successfully.');
 				hc.showLockedAlert('Redirecting you back to the homepage');
 			}
 		},
