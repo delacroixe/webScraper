@@ -10,14 +10,7 @@ function alchemyAPI () {
 		  if (err) throw err;
 
 		  var keywords = response.keywords;
-<<<<<<< HEAD
 		  callback(keywords);
-=======
-		  //console.log("keywords");
-		  //console.log(keywords);
-		  //console.log(response);
->>>>>>> 279a6579634a57293f62ea733396e0bec2bd8673
-
 		});
 	}
 
@@ -26,14 +19,8 @@ function alchemyAPI () {
 		  if (err) throw err;
 
 		  var entities = response.entities;
-<<<<<<< HEAD
-		  callback(entities);
-=======
-		  //console.log("entidades");
-		  //console.log(entities);
-		  //console.log(response);
->>>>>>> 279a6579634a57293f62ea733396e0bec2bd8673
 
+		  callback(entities);
 		});
 	}
 
@@ -42,11 +29,6 @@ function alchemyAPI () {
 		  if (err) throw err;
 
 		  var category = response.category;
-<<<<<<< HEAD
-=======
-		  //console.log("category");
-		  //console.log(category);
->>>>>>> 279a6579634a57293f62ea733396e0bec2bd8673
 		  callback(category)
 
 		});
