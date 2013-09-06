@@ -16,6 +16,7 @@
     "moment" : "*",
     "emailjs": "*",
     "node-schedule" : "*",
-    "alchemy-api": "*"
+    "alchemy-api": "*",
+    "request" : "*"
   }
 }

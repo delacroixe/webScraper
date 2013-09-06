@@ -1,6 +1,7 @@
 /*
  *
  */
+ var moment    = require('moment');
 
 function SubscriptionDAO(db) {
   "use strict";

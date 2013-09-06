@@ -28,6 +28,13 @@ function ItemDAO(db) {
     });
   }
 
+  this.getItems = function(last, callback) {
+    db.collection('news').find().toArray(function(err, result) {
+      if (err) throw err;
+      else callback(result);
+    });
+  }
+
   this.save = function(data, callback){
 
     data.insertData = new Date().toISOString();

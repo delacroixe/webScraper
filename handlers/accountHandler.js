@@ -3,7 +3,6 @@
  */
 
 var crypto 		= require('crypto');
-var moment 		= require('moment');
 var AccountDAO = require('../DAO/accountDAO');
 
  function AccountHandler(db) {
