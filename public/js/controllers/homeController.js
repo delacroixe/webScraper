@@ -36,9 +36,9 @@ function HomeController()
 		var baseurl = 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=-1&q='
 		$('.modal-confirm').modal('hide');
 		var that = this;
-
+		var newurl = (($('#suburl').val()).indexOf('http://') === -1)? 'http://'+$('#suburl').val() : $('#suburl').val();
 		$.ajax({
-			url: baseurl + $('#suburl').val(),
+			url: baseurl + newurl,
 			type: 'GET',
 			dataType: 'jsonp',
 			success: function(data){
@@ -52,6 +52,7 @@ function HomeController()
 					$('#subdesc').show();
 					$('#subref').show();
 					$('#url-cg').removeClass('control-group error');
+					$('#suburl').val(newurl);
 				}
 				else that.showInvalidRSS('The RSS URL you inserted is not valid, check it out and try again!');
 			},
