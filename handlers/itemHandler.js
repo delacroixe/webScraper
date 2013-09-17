@@ -12,7 +12,7 @@ function ItemHandler (db, io) {
 
 	this.getAll = function(req, res, next) {
 
-		itemDAO.getAll(function(err, results) {
+		item.getAll(function(err, results) {
 
 			if (err) return next(err);
 			return res.send(results);

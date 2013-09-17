@@ -20,7 +20,7 @@ function ItemDAO(db, io) {
   }
 
   var rt = new rtc(io);
-  
+
   this.getAll = function(callback){
 
     db.collection('news').find().toArray(function(err, result) {
