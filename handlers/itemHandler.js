@@ -12,7 +12,7 @@ function ItemHandler (db, io) {
 
 	this.getAll = function(req, res, next) {
 
-		itemDAO.getAll(function(err, results) {
+		item.getAll(function(err, results) {
 
 			if (err) return next(err);
 			return res.send(results);
@@ -26,7 +26,7 @@ function ItemHandler (db, io) {
 			that.getAll(req, res, next);
 		}
 		else
-			itemDAO.getItems(last, limit, function(err, results) {
+			item.getItems(last, limit, function(err, results) {
 				if (err) return next(err);
 				return res.send(results);
 			});
@@ -36,7 +36,7 @@ function ItemHandler (db, io) {
 
 		alchemy.category(obj.url, function(data){
 			obj.cat = data;
-			itemDAO.save(obj, function(err, results) {
+			item.save(obj, function(err, results) {
 				if (err) callback(err);
 				else {
 					console.log('New item saved: '+obj.link);
