@@ -21,21 +21,24 @@ function HomeController()
 		$('.modal-confirm').modal('show');
 	});
 
-// handle account deletion //
+// handle subscription deletion //
 	$('.modal-confirm .submit').click(function(){ that.deleteSubscription(); });
 
 
 // handle edit sub//
 	$('a.subedit').click(function(){ that.onSubEdit($(this).attr('id')); });
 
+// handle update subscription
+	$('a.subref').click(function(){ that.refreshSubcription($(this).attr('id')); });
+
 	this.insertURL = function()
 	{
 		var baseurl = 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=-1&q='
 		$('.modal-confirm').modal('hide');
 		var that = this;
-
+		var newurl = (($('#suburl').val()).indexOf('http://') === -1)? 'http://'+$('#suburl').val() : $('#suburl').val();
 		$.ajax({
-			url: baseurl + $('#suburl').val(),
+			url: baseurl + newurl,
 			type: 'GET',
 			dataType: 'jsonp',
 			success: function(data){
@@ -49,11 +52,28 @@ function HomeController()
 					$('#subdesc').show();
 					$('#subref').show();
 					$('#url-cg').removeClass('control-group error');
+					$('#suburl').val(newurl);
 				}
 				else that.showInvalidRSS('The RSS URL you inserted is not valid, check it out and try again!');
 			},
 			error: function(jqXHR){
 				console.log(jqXHR.responseText+' :: '+jqXHR.statusText);
+			}
+		});
+	}
+
+	this.refreshSubcription = function(id) {
+		$.ajax({
+			url: '/refSub',
+			type: 'GET',
+			dataType: 'jsonp',
+			data: {id: id},
+			success: function (data){
+				that.onSuccess('Success!','Subscription refreshed!');
+			},
+			error: function (jqXHR){
+				if(jqXHR.status === 200) that.onSuccess('Success!','Subscription refreshed!');
+				else console.log(jqXHR.statusText + " :: " + jqXHR.responseText);
 			}
 		});
 	}
@@ -86,7 +106,7 @@ function HomeController()
 			dataType: 'jsonp',
 			data: {id: subid},
 			success: function(data){
-				this.showLockedAlert('Your subscription has been deleted.<br>Redirecting you back to the homepage.');
+				that.showLockedAlert('Your subscription has been deleted.<br>Redirecting you back to the homepage.');
 			},
 			error: function(jqXHR){
 				if(jqXHR.status === 200)that.showLockedAlert('Your subscription has been deleted.<br>Redirecting you back to the homepage.');
@@ -164,18 +184,17 @@ function HomeController()
 		});
 	}
 
-
 }
 
-HomeController.prototype.onSuccess = function()
+HomeController.prototype.onSuccess = function(title, msg)
 {
 	if(!$('#subscription-form-btn1').hasClass('btn-success'))
 		$('#subscription-form-btn1').toggleClass('btn-success');
 	if($('#subscription-form-btn1').hasClass('btn-warning'))
 		$('#subscription-form-btn1').toggleClass('btn-warning');
 	$('.modal-alert').modal({ show : false, keyboard : true, backdrop : true });
-	$('.modal-alert .modal-header h3').text('Success!');
-	$('.modal-alert .modal-body p').html('A subscription has been handled successfully.');
+	$('.modal-alert .modal-header h3').text(title);
+	$('.modal-alert .modal-body p').html(msg);
 	$('.modal-alert').modal('show');
 	$('.modal-alert button').off('click');
 }

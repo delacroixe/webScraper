@@ -5,12 +5,16 @@ var AlchemyAPI = require('../modules/alchemyAPI').alchemyAPI;
 
 function ItemHandler (db, io) {
 
+<<<<<<< HEAD
 	var item = new ItemDAO(db, io);
+=======
+	var itemDAO = new ItemDAO(db);
+>>>>>>> 861e68b888f3b033f307aaee7520cb92ff693a44
 	var alchemy = new AlchemyAPI();
 
 	this.showAll = function(req, res, next) {
 
-		item.all(function(err, results) {
+		itemDAO.all(function(err, results) {
 
 			if (err) return next(err);
 			return res.send(results);
@@ -19,11 +23,13 @@ function ItemHandler (db, io) {
 
 	this.saveOne = function(obj, callback) {
 
-		var testURL = obj.link;
-		alchemy.category(testURL, function(data){
+		alchemy.category(obj.url, function(data){
 			obj.cat = data;
-			item.save(obj, function(err, results) {
-				if (err) callback('Errorea itema gordetzean');
+			itemDAO.save(obj, function(err, results) {
+				if (err) callback(err);
+				else {
+					console.log('New item saved: '+obj.link);	
+				}
 			});
 		});
 	};
