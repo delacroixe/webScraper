@@ -19,9 +19,10 @@ function ItemDAO(db, io) {
       return new ItemDAO(db);
   }
 
+  var rt = new rtc(io);
+
   this.getAll = function(callback){
 
-    var rt = new rtc(io);
     db.collection('news').find().toArray(function(err, result) {
       if (err) throw err;
 
