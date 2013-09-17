@@ -1,4 +1,8 @@
 
+
+
+
+
  function realTime(io) {
 	io.sockets.on('connection', function(socket){
 		console.log(socket.id+' conectado');

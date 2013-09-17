@@ -5,11 +5,8 @@ var AlchemyAPI = require('../modules/alchemyAPI').alchemyAPI;
 
 function ItemHandler (db, io) {
 
-<<<<<<< HEAD
+
 	var item = new ItemDAO(db, io);
-=======
-	var itemDAO = new ItemDAO(db);
->>>>>>> 861e68b888f3b033f307aaee7520cb92ff693a44
 	var alchemy = new AlchemyAPI();
 
 	this.showAll = function(req, res, next) {
@@ -28,7 +25,7 @@ function ItemHandler (db, io) {
 			itemDAO.save(obj, function(err, results) {
 				if (err) callback(err);
 				else {
-					console.log('New item saved: '+obj.link);	
+					console.log('New item saved: '+obj.link);
 				}
 			});
 		});

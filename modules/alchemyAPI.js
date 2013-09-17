@@ -11,11 +11,6 @@ function alchemyAPI () {
 
 		  var keywords = response.keywords;
 		  callback(keywords);
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 861e68b888f3b033f307aaee7520cb92ff693a44
 		});
 	}
 
@@ -24,11 +19,6 @@ function alchemyAPI () {
 		  if (err) throw err;
 
 		  var entities = response.entities;
-<<<<<<< HEAD
-		  callback(entities);
-=======
->>>>>>> 861e68b888f3b033f307aaee7520cb92ff693a44
-
 		  callback(entities);
 		});
 	}

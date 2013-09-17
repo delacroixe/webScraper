@@ -3,16 +3,11 @@
  */
 
 
-<<<<<<< HEAD
+
 var rtc = require('../modules/realTime').realTime;
 
-
-
-
 function ItemDAO(db, io) {
-=======
-function ItemDAO(db) {
->>>>>>> 861e68b888f3b033f307aaee7520cb92ff693a44
+
   "use strict";
 
   /* If this constructor is called without the "new" operator, "this" points
@@ -46,15 +41,6 @@ function ItemDAO(db) {
   this.save = function(data, callback){
 
     data.insertData = new Date().toISOString();
-<<<<<<< HEAD
-    db.collection('news').insert(data , function(err, result) {
-      //if (err) console.log(" Duplicado ! -> "+data.titulo);
-      if (err) return callback(err, null);
-
-      if (result){
-        callback(err, result);
-        rt.refresh(data);
-=======
     db.collection('news').findOne({link: data.link}, function(e, o) {
       if(o) {
         callback('error-new-exists')
@@ -65,10 +51,9 @@ function ItemDAO(db) {
           if (err) return callback(err, null);
           if (result){
             callback(err, result);
-            //socket.emit('additem',req);
+            rt.refresh(data);
           }
         });
->>>>>>> 861e68b888f3b033f307aaee7520cb92ff693a44
       }
     });
   };
