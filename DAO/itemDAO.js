@@ -2,11 +2,12 @@
  * CRUD
  */
 
-//var db = require('mongoskin').db('localhost:27017/mydb',{safe: true});
-// var io = require('socket.io-client');
-// var socket = io.connect('http://localhost:4242');
 
-function ItemDAO(db) {
+
+var rtc = require('../modules/realTime').realTime;
+
+function ItemDAO(db, io) {
+
   "use strict";
 
   var that = this;
@@ -19,6 +20,8 @@ function ItemDAO(db) {
   }
 
   this.getAll = function(callback){
+
+    var rt = new rtc(io);
     db.collection('news').find().toArray(function(err, result) {
       if (err) throw err;
 
@@ -50,7 +53,7 @@ function ItemDAO(db) {
           if (err) return callback(err, null);
           if (result){
             callback(err, result);
-            //socket.emit('additem',req);
+            rt.refresh(data);
           }
         });
       }

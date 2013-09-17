@@ -1,9 +1,11 @@
 
 
 
-module.exports = function(io) {
+
+
+ function realTime(io) {
 	io.sockets.on('connection', function(socket){
-		console.log("Client connected");
+		console.log(socket.id+' conectado');
 
 		socket.on('additem',function(item){
 			console.log(item);
@@ -20,6 +22,15 @@ module.exports = function(io) {
 		});
 
 	});
+
+	this.refresh = function(data){
+		console.log('dentro de REAL TIME');
+		console.log(data);
+		io.sockets.emit('reciveItem', data);
+	}
+
 };
+
+module.exports.realTime = realTime;
 
 

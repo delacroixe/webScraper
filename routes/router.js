@@ -6,11 +6,16 @@ var AccountHandler = require('../handlers/accountHandler');
 var SubscriptionHandler = require('../handlers/subscriptionHandler');
 var ItemHandler = require('../handlers/itemHandler');
 
-module.exports = function(app, db, ch) {
+module.exports = function(app, db, CronAPI, io) {
+
+	var ch = new CronAPI(db, io);
+    ch.initCrons(function(err){
+      if(err) console.log('Error initing crons...' + e);
+    });
 
 	var accountHandler = new AccountHandler(db);
-	var subscriptionHandler = new SubscriptionHandler(db, ch);
-	var itemHandler = new ItemHandler(db);
+	//var subscriptionHandler = new SubscriptionHandler(db, ch);
+	var itemHandler = new ItemHandler(db, io);
 
 /*
 //Llamadas para testeo

@@ -19,7 +19,6 @@ function alchemyAPI () {
 		  if (err) throw err;
 
 		  var entities = response.entities;
-
 		  callback(entities);
 		});
 	}

@@ -40,17 +40,14 @@ MongoClient.connect('mongodb://localhost:27017/scraperdb', function(err, db) {
       app.use(express.errorHandler());
     });
 
-    //require('./routes/router')(app);
-    var ch = new CronAPI(db);
-    ch.initCrons(function(err){
-      if(err) console.log('Error initing crons...' + e);
-    });
-    routes(app, db, ch);
+
+
+    routes(app, db, CronAPI, io);
 
     server.listen(PORT, function (){
       console.log("working! on port "+ PORT);
     });
 });
 
-// Required functions
-require('./modules/io')(io);
+
+

@@ -5,10 +5,10 @@ var schedule 	= require('node-schedule');
 var request 	= require('request');
 var ItemHandler = require('../handlers/itemHandler');
 
-function CronHandler(db) {
+function CronHandler(db, io) {
 	"user strict";
 
-	var itemHandler = new ItemHandler(db);
+	var itemHandler = new ItemHandler(db, io);
 	var crons = [];
 	var base_url = 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=-1&q=';
 	
@@ -38,7 +38,7 @@ function CronHandler(db) {
 				console.log('Creating cron...' + subscription._id);
 				crons["'"+subscription._id+"'"] = schedule.scheduleJob('*/'+subscription.refr+' * * * *', function(){
 					that.refreshSubscription(subscription);
-				});				
+				});
 				callback();
 			}
 			else{
@@ -64,7 +64,7 @@ function CronHandler(db) {
 			callback('cron-delete-error');
 		}
 	};
-	
+
 	this.refreshSubscription = function(subscription) {
 		console.log('Updating... ' + subscription._id);
 

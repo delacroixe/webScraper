@@ -3,9 +3,10 @@ var ItemDAO = require('../DAO/itemDAO').ItemDAO;
 var AlchemyAPI = require('../modules/alchemyAPI').alchemyAPI;
 
 
-function ItemHandler (db) {
+function ItemHandler (db, io) {
 
-	var itemDAO = new ItemDAO(db);
+
+	var item = new ItemDAO(db, io);
 	var alchemy = new AlchemyAPI();
 	var that = this;
 
@@ -38,7 +39,7 @@ function ItemHandler (db) {
 			itemDAO.save(obj, function(err, results) {
 				if (err) callback(err);
 				else {
-					console.log('New item saved: '+obj.link);	
+					console.log('New item saved: '+obj.link);
 				}
 			});
 		});
