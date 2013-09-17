@@ -45,12 +45,12 @@ MongoClient.connect('mongodb://localhost:27017/scraperdb', function(err, db) {
     ch.initCrons(function(err){
       if(err) console.log('Error initing crons...' + e);
     });
-    routes(app, db, ch);
+    routes(app, db, ch, io);
 
     server.listen(PORT, function (){
       console.log("working! on port "+ PORT);
     });
 });
 
-// Required functions
-require('./modules/io')(io);
+
+

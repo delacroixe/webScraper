@@ -3,9 +3,9 @@ var ItemDAO = require('../DAO/itemDAO').ItemDAO;
 var AlchemyAPI = require('../modules/alchemyAPI').alchemyAPI;
 
 
-function ItemHandler (db) {
+function ItemHandler (db, io) {
 
-	var item = new ItemDAO(db);
+	var item = new ItemDAO(db, io);
 	var alchemy = new AlchemyAPI();
 
 	this.showAll = function(req, res, next) {

@@ -6,11 +6,11 @@ var AccountHandler = require('../handlers/accountHandler');
 var SubscriptionHandler = require('../handlers/subscriptionHandler');
 var ItemHandler = require('../handlers/itemHandler');
 
-module.exports = function(app, db, ch) {
+module.exports = function(app, db, ch, io) {
 
 	var accountHandler = new AccountHandler(db);
 	var subscriptionHandler = new SubscriptionHandler(db, ch);
-	var itemHandler = new ItemHandler(db);
+	var itemHandler = new ItemHandler(db, io);
 
 //Llamadas para testeo
 	app.get('/todas', itemHandler.showAll);

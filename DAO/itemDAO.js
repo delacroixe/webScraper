@@ -2,13 +2,13 @@
  * CRUD
  */
 
-//var db = require('mongoskin').db('localhost:27017/mydb',{safe: true});
-// var io = require('socket.io-client');
-// var socket = io.connect('http://localhost:4242');
+
+var rtc = require('../modules/realTime').realTime;
 
 
 
-function ItemDAO(db) {
+
+function ItemDAO(db, io) {
   "use strict";
 
   /* If this constructor is called without the "new" operator, "this" points
@@ -17,6 +17,8 @@ function ItemDAO(db) {
       console.log('Warning: ItemDAO constructor called without "new" operator');
       return new ItemDAO(db);
   }
+
+  var rt = new rtc(io);
 
   this.all = function(callback){
     db.collection('news').find().toArray(function(err, result) {
@@ -39,7 +41,7 @@ function ItemDAO(db) {
 
       if (result){
         callback(err, result);
-        //socket.emit('additem',req);
+        rt.refresh(data);
       }
     });
   };
