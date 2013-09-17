@@ -9,6 +9,8 @@
 function ItemDAO(db) {
   "use strict";
 
+  var that = this;
+
   /* If this constructor is called without the "new" operator, "this" points
    * to the global object. Log a warning and call it correctly. */
   if (false === (this instanceof ItemDAO)) {
@@ -16,7 +18,7 @@ function ItemDAO(db) {
       return new ItemDAO(db);
   }
 
-  this.all = function(callback){
+  this.getAll = function(callback){
     db.collection('news').find().toArray(function(err, result) {
       if (err) throw err;
 
@@ -28,8 +30,8 @@ function ItemDAO(db) {
     });
   }
 
-  this.getItems = function(last, callback) {
-    db.collection('news').find().toArray(function(err, result) {
+  this.getItems = function(last, limit, callback) {
+    db.collection('news').find({_id:{$gt: that.getObjectId(last)}}).sort({_id:1}).limit(limit).toArray(function(err, result) {
       if (err) throw err;
       else callback(result);
     });
@@ -54,6 +56,10 @@ function ItemDAO(db) {
       }
     });
   };
+
+  this.getObjectId = function (id) {
+    return db.collection('news').db.bson_serializer.ObjectID.createFromHexString(id)
+  }
 
   // this.last = function(callback){
   //   db.collection('news').find().sort({_id:1}).limit(20).toArray(function(err, result) {

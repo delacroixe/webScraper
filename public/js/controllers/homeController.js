@@ -33,33 +33,15 @@ function HomeController()
 
 	this.insertURL = function()
 	{
-		var baseurl = 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=-1&q='
+		var set = false;
 		$('.modal-confirm').modal('hide');
-		var that = this;
-		var newurl = (($('#suburl').val()).indexOf('http://') === -1)? 'http://'+$('#suburl').val() : $('#suburl').val();
-		$.ajax({
-			url: baseurl + newurl,
-			type: 'GET',
-			dataType: 'jsonp',
-			success: function(data){
-				if(data.responseData != null){
-					$('#lsubname').show();
-					$('#lsubdesc').show();
-					$('#lsubref').show();
-		 			$('#subname').val(data.responseData.feed.title);
-					$('#subdesc').val(data.responseData.feed.description);
-					$('#subname').show();
-					$('#subdesc').show();
-					$('#subref').show();
-					$('#url-cg').removeClass('control-group error');
-					$('#suburl').val(newurl);
-				}
-				else that.showInvalidRSS('The RSS URL you inserted is not valid, check it out and try again!');
-			},
-			error: function(jqXHR){
-				console.log(jqXHR.responseText+' :: '+jqXHR.statusText);
-			}
-		});
+		if(checkIsRSS()) {
+			set = true;
+		}
+		if(!set && checkIsTW()){
+			set = true;
+		}
+		else that.showInvalidRSS('The RSS URL you inserted is not valid, check it out and try again!');
 	}
 
 	this.refreshSubcription = function(id) {
@@ -182,6 +164,62 @@ function HomeController()
 				console.log(jqXHR.responseText+' :: '+jqXHR.statusText);
 			}
 		});
+	}
+
+	var checkIsRSS = function() {
+		var newurl = (($('#suburl').val()).indexOf('http://') === -1)? 'http://'+$('#suburl').val() : $('#suburl').val();
+		var baseurl = 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=-1&q='
+		$.ajax({
+			url: baseurl + newurl,
+			type: 'GET',
+			dataType: 'jsonp',
+			success: function(data){
+				if(data.responseData != null){
+					$('#lsubname').show();
+					$('#lsubdesc').show();
+					$('#lsubref').show();
+		 			$('#subname').val(data.responseData.feed.title);
+					$('#subdesc').val(data.responseData.feed.description);
+					$('#subname').show();
+					$('#subdesc').show();
+					$('#subref').show();
+					$('#url-cg').removeClass('control-group error');
+					$('#suburl').val(newurl);
+					$('#substype').val('rss');
+					return true;
+				}
+				return false;
+			},
+			error: function(jqXHR){
+				console.log(jqXHR.responseText+' :: '+jqXHR.statusText);
+				return false;
+			}
+		});
+	}
+
+	var checkIsTW = function() {
+		var username = null;
+		var result = false;
+		if (($('#suburl').val()).indexOf('https://twitter.com/') !== -1) {
+			username = $('#suburl').val().substring('https://twitter.com/'.length);
+			if(username.indexOf('/') !== -1){
+				username = username.substring(0, username.indexOf('/'));
+			}
+			$.ajax({
+				url: '/checkTw',
+				type: 'GET',
+				dataType: 'jsonp',
+				data: {username: username},
+				success: function (data){
+					console.log(data);
+				},
+				error: function (jqXHR){
+					if(jqXHR.status === 200) console.log('Success!' + jqXHR.responseText);
+					else console.log(jqXHR.statusText + " :: " + jqXHR.responseText);
+				}
+			});
+		}
+		return result;
 	}
 
 }

@@ -11,6 +11,7 @@ function CronHandler(db) {
 	var itemHandler = new ItemHandler(db);
 	var crons = [];
 	var base_url = 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=-1&q=';
+	
 
 	var that = this;
 
@@ -66,6 +67,17 @@ function CronHandler(db) {
 	
 	this.refreshSubscription = function(subscription) {
 		console.log('Updating... ' + subscription._id);
+
+		if (subscription && subscription.type === 'rss') {
+			refreshRSS(subscription);
+		}
+		else if (subscription && subscription.type === 'tw') {
+			refreshTW(subscription);
+		}
+		
+	};
+
+	var refreshRSS = function(subscription) {
 		var options = {
 			url: base_url + subscription.url
 		};
@@ -91,7 +103,11 @@ function CronHandler(db) {
 		    else{
 		    	console.log('Update failed for '+subscription._id);
 		    }
-		 });
+		});
+	};
+
+	var refreshTW = function(subscription) {
+
 	};
 };
 

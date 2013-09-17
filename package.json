@@ -17,6 +17,7 @@
     "emailjs": "*",
     "node-schedule" : "*",
     "alchemy-api": "*",
-    "request" : "*"
+    "request" : "*",
+    "twitter-1.1" : "*"
   }
 }

@@ -129,8 +129,8 @@ module.exports = function(app, db, ch) {
 
 //Una ruta que devuelve ese String
 
-	app.get('/news', function (req, res) {
-	  itemHandler.showAll(req, res, function(obj){
+	app.get('/items', function (req, res) {
+	  itemHandler.getItems(req, res, function(obj){
 	    res.json(obj);
 	  });
 	});
@@ -173,6 +173,19 @@ module.exports = function(app, db, ch) {
 	app.get('/getSub', function(req, res) {
 		subscriptionHandler.getSubscriptionById(req.param('id')
 		, function(e, o){
+			if (e){
+				res.send(e, 400);
+			}	else{
+				res.send(o);
+			}
+		});
+	});
+
+	app.get('/checkTw', function(req, res) {
+		subscriptionHandler.getTwInfo(req.param('username')
+		, function(e, o){
+			console.log(e);
+			console.log(o);
 			if (e){
 				res.send(e, 400);
 			}	else{

@@ -3,15 +3,18 @@
  */
 var moment 		= require('moment');
 var SubscriptionDAO = require('../DAO/subscriptionDAO');
+var TwitterHandler = require('../modules/twitterAPI');
 
 function SubscriptionHandler(db, ch){
 	"user strict";
 
 	var subs_type = [
-		{short: 'rss', name: 'RSS'}
+		{short: 'rss', name: 'RSS'},
+		{short: 'tw', name: 'Twitter'}
 	];
 
 	var subscriptionDAO = new SubscriptionDAO(db);
+	var twitterHandler = new TwitterHandler();
 	var that = this;
 
 	this.handleSubscription = function(newData, callback) {
@@ -49,6 +52,10 @@ function SubscriptionHandler(db, ch){
 
 	this.getAllSubsType = function(callback) {
 		return subs_type;
+	}
+
+	this.getTwInfo = function(username, callback) {
+		twitterHandler.getUserInfo(username, callback);
 	}
 
 	var addSubscription = function(data, callback)	{

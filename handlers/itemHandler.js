@@ -7,14 +7,28 @@ function ItemHandler (db) {
 
 	var itemDAO = new ItemDAO(db);
 	var alchemy = new AlchemyAPI();
+	var that = this;
 
-	this.showAll = function(req, res, next) {
+	this.getAll = function(req, res, next) {
 
-		itemDAO.all(function(err, results) {
+		itemDAO.getAll(function(err, results) {
 
 			if (err) return next(err);
 			return res.send(results);
 		});
+	};
+
+	this.getItems = function(req, res, next) {
+		var last = req.param('rid');
+		var limit = parseInt(req.param('l')) || 20;
+		if (!last || last === '') {
+			that.getAll(req, res, next);
+		}
+		else
+			itemDAO.getItems(last, limit, function(err, results) {
+				if (err) return next(err);
+				return res.send(results);
+			});
 	};
 
 	this.saveOne = function(obj, callback) {
