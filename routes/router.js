@@ -14,7 +14,7 @@ module.exports = function(app, db, CronAPI, io) {
     });
 
 	var accountHandler = new AccountHandler(db);
-	//var subscriptionHandler = new SubscriptionHandler(db, ch);
+	var subscriptionHandler = new SubscriptionHandler(db, ch);
 	var itemHandler = new ItemHandler(db, io);
 
 /*
