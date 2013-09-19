@@ -15,7 +15,7 @@ function TwitterHandler() {
 	var that = this;
 
 	this.getUserInfo = function(username, callback) {
-		/*twit.stream(username, {}, function(stream) {
+		twit.stream('user', {screen_name:username}, function(stream) {
 			tstream = stream;
 			stream.on('data', function(data){
 				console.log(util.inspect(data));
@@ -26,10 +26,15 @@ function TwitterHandler() {
 				callback();
 			});
 		});
-		*/
-		twit.get('/users/show?screen_name='+username, {include_entities:true}, function(data) {
+		/*
+		
+		twit.get('user', {include_entities:true, screen_name:username}, function(data) {
     		console.log(util.inspect(data));
 		});
+		twit.verifyCredentials(function(data) {
+			console.log(util.inspect(data));
+		});
+		*/
 	};
 
 	this.destroyTwit = function(callback) {

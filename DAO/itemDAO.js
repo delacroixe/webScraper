@@ -35,7 +35,7 @@ function ItemDAO(db, io) {
   }
 
   this.getItems = function(last, limit, callback) {
-    db.collection('news').find({_id:{$gt: that.getObjectId(last)}}).sort({_id:1}).limit(limit).toArray(function(err, result) {
+    db.collection('news').find({_id:{$gt: that.getObjectId(last)}}).sort({_id:-1}).limit(limit).toArray(function(err, result) {
       if (err) throw err;
       else callback(result);
     });

@@ -24,8 +24,8 @@
 	});
 
 	this.refresh = function(data){
-		console.log('dentro de REAL TIME');
-		console.log(data);
+		//console.log('dentro de REAL TIME');
+		//console.log(data);
 		io.sockets.emit('reciveItem', data);
 	}
 

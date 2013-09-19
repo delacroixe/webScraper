@@ -85,7 +85,8 @@ function CronHandler(db, io) {
 		    if (!error && response.statusCode == 200) {
 		      var response = JSON.parse(body);
 		      //console.log(response.responseData.feed.entries.length);
-		      response.responseData.feed.entries.forEach(function(item) {
+		      var entries = response.responseData.feed.entries.reverse(); 
+		      entries.forEach(function(item) {
 		      	var data = {
 		      		'titulo' : item.title,
 		      		'link' : item.link,
@@ -94,10 +95,9 @@ function CronHandler(db, io) {
 		      		'texto' : item.content,
 		      		'entrada' : item.contentSnippet,
 		      		'def_cat' : item.categories,
+		      		'img' : imgFinder(item.content)
 		      	};
-
 		      	itemHandler.saveOne(data, function(e){});
-
 		      });
 		    }
 		    else{
@@ -109,6 +109,17 @@ function CronHandler(db, io) {
 	var refreshTW = function(subscription) {
 
 	};
+
+	var imgFinder = function(text) {
+		var b = text.indexOf('img src=');
+		var b2 = text.indexOf('.jpg');
+
+		if((b != -1)&&(b2 != -1))
+		var img = text.substring(b+9,b2+4); 
+		else var img = "http://www.rtpa.es/images/rss.jpg";
+
+		return img;
+	}
 };
 
 module.exports = CronHandler;

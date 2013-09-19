@@ -38,9 +38,9 @@ function HomeController()
 		if(checkIsRSS()) {
 			set = true;
 		}
-		if(!set && checkIsTW()){
+		/*if(!set && checkIsTW()){
 			set = true;
-		}
+		}*/
 		else that.showInvalidRSS('The RSS URL you inserted is not valid, check it out and try again!');
 	}
 
