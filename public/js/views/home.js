@@ -36,6 +36,8 @@ $(document).ready(function(){
 	$('#lsubdesc').hide();
 	$('#subref').hide();
 	$('#lsubref').hide();
+	$('#lsubtags').hide();
+	$('#subtags').hide();
 	$('#subscription-form-btn2').hide();
 
 // setup the confirm window that displays when the user chooses to delete their account //
@@ -46,5 +48,7 @@ $(document).ready(function(){
 	$('.modal-confirm .cancel').html('Cancel');
 	$('.modal-confirm .submit').html('Delete');
 	$('.modal-confirm .submit').addClass('btn-danger');
+
+	hc.initTags();
 
 })

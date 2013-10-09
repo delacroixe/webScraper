@@ -9,10 +9,10 @@ var ItemHandler = require('../handlers/itemHandler');
 module.exports = function(app, db, CronAPI, io) {
 
 	var ch = new CronAPI(db, io);
-    ch.initCrons(function(err){
+	ch.initCrons(function(err){
       if(err) console.log('Error initing crons...' + e);
     });
-
+	
 	var accountHandler = new AccountHandler(db);
 	var subscriptionHandler = new SubscriptionHandler(db, ch);
 	var itemHandler = new ItemHandler(db, io);
@@ -147,13 +147,16 @@ module.exports = function(app, db, CronAPI, io) {
 	// if user is not logged-in redirect back to login page //
 	        res.redirect('/');
 	    }   else{
-	    	subscriptionHandler.getSubscriptions(null, function(e){
-	    		res.render('home', {
-					title : 'Publisher Home',
-					udata : req.session.user,
-					subs: e,
-					substype: subscriptionHandler.getAllSubsType()
-				});
+	    	subscriptionHandler.getSubscriptionTags(function(data){
+		    	subscriptionHandler.getSubscriptions(null, function(e){
+		    		res.render('home', {
+						title : 'Publisher Home',
+						udata : req.session.user,
+						subs: e,
+						substype: subscriptionHandler.getAllSubsType(),
+						substags: data
+					});
+		    	});
 	    	});
 	    }
 	});
@@ -165,7 +168,8 @@ module.exports = function(app, db, CronAPI, io) {
 			type 	: req.param('subtype'),
 			url 	: req.param('suburl'),
 			desc	: req.param('subdesc'),
-			refr	: req.param('subref')
+			refr	: req.param('subref'),
+			tags	: req.param('tags')
 		}, function(e){
 			if (e){
 				res.send(e, 400);
@@ -183,6 +187,12 @@ module.exports = function(app, db, CronAPI, io) {
 			}	else{
 				res.send(o);
 			}
+		});
+	});
+
+	app.get('/subsTags', function(req, res) {
+		subscriptionHandler.getSubscriptionTags(function(r){
+			res.send(r);
 		});
 	});
 

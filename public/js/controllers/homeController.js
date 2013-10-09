@@ -5,7 +5,6 @@ function HomeController()
 	var that = this;
 	var subid = '';
 
-
 // handle user logout //
 	$('#btn-logout').click(function(){ that.attemptLogout(); });
 
@@ -106,15 +105,35 @@ function HomeController()
 		$('#lsubname').show();
 		$('#lsubdesc').show();
 		$('#lsubref').show();
+		$('#lsubtags').show();
 		$('#subid').val(data._id);
 		$('#suburl').val(data.url);
 	 	$('#subname').val(data.name);
 		$('#subdesc').val(data.desc);
 		$('#subref').val(data.refr);
+		$('#subtags').remove();
+		$('#tags-cg div.controls').append('<ul id="subtags"></ul>')
+		if(data.tags != undefined){
+			for(var i=0; i < data.tags.length; i++) {
+				$('#subtags').append('<li>'+data.tags[i]+'</li>');
+			}	
+		}
+		that.initTags();
 		$('#subref').show();
 		$('#subname').show();
 		$('#subdesc').show();
+		$('#subtags').show();
 		$('#subscription-form-btn2').show();
+	}
+
+	this.initTags = function(){
+		$('#subtags').tagit({
+			availableTags: ($('#deftags').val()).split(","),
+			autocomplete: {delay: 0, minLengh: 2},
+			caseSensitive: false,
+		});
+		$('span.ui-helper-hidden-accessible').hide();
+		$('.tagit-close span').show();
 	}
 
 	this.emptySubForm = function(data){
@@ -175,14 +194,17 @@ function HomeController()
 			dataType: 'jsonp',
 			success: function(data){
 				if(data.responseData != null){
+					console.log(data.responseData.feed);
 					$('#lsubname').show();
 					$('#lsubdesc').show();
 					$('#lsubref').show();
+					$('#lsubtags').show();
 		 			$('#subname').val(data.responseData.feed.title);
 					$('#subdesc').val(data.responseData.feed.description);
 					$('#subname').show();
 					$('#subdesc').show();
 					$('#subref').show();
+					$('#subtags').show();
 					$('#url-cg').removeClass('control-group error');
 					$('#suburl').val(newurl);
 					$('#substype').val('rss');

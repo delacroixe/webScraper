@@ -4,11 +4,13 @@
 var schedule 	= require('node-schedule');
 var request 	= require('request');
 var ItemHandler = require('../handlers/itemHandler');
+var DiffBotAPI 	= require('./diffBotAPI');
 
 function CronHandler(db, io) {
 	"user strict";
 
 	var itemHandler = new ItemHandler(db, io);
+	var diffBotAPI = new DiffBotAPI();
 	var crons = [];
 	var base_url = 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=-1&q=';
 	
@@ -87,17 +89,35 @@ function CronHandler(db, io) {
 		      //console.log(response.responseData.feed.entries.length);
 		      var entries = response.responseData.feed.entries.reverse(); 
 		      entries.forEach(function(item) {
-		      	var data = {
-		      		'titulo' : item.title,
-		      		'link' : item.link,
-		      		'fecha' : item.publishedDate,
-		      		'author' : item.author,
-		      		'texto' : item.content,
-		      		'entrada' : item.contentSnippet,
-		      		'def_cat' : item.categories,
-		      		'img' : imgFinder(item.content)
-		      	};
-		      	itemHandler.saveOne(data, function(e){});
+		      	diffBotAPI.getArticleJSON(item.link, function(json){
+		      		var data = {};
+		      		if(json != null) {
+		      			data = {
+				      		'titulo' : json.title,
+				      		'link' : json.resolved_url,
+				      		'fecha' : json,
+				      		'author' : json.uthor,
+				      		'texto' : json.text,
+				      		'entrada' : item.contentSnippet,
+				      		'def_cat' : json.tags,
+				      		'img' : jsonMediaFinder(json.media) || imgFinder(item.content)
+				      	};
+		      		}
+		      		else {
+				      	data = {
+				      		'titulo' : item.title,
+				      		'link' : item.link,
+				      		'fecha' : item.publishedDate,
+				      		'author' : item.author,
+				      		'texto' : item.content,
+				      		'entrada' : item.contentSnippet,
+				      		'def_cat' : item.categories,
+				      		'img' : imgFinder(item.content)
+				      	};
+		      		}
+		      		data.tags = subscription.tags;
+		      		itemHandler.saveOne(data, function(e){});
+		      	});
 		      });
 		    }
 		    else{
@@ -119,6 +139,18 @@ function CronHandler(db, io) {
 		else var img = "http://www.rtpa.es/images/rss.jpg";
 
 		return img;
+	}
+
+	var jsonMediaFinder = function (data) {
+		result = null;
+		if(data) {
+			for(var i = 0; i < data.length; i++) {
+				if(data[i].primary === 'true'){
+					result = data[i].link;
+				}
+			}
+		}
+		return result;
 	}
 };
 

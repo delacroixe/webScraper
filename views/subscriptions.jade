@@ -1,5 +1,5 @@
 #subscription-form-container
-	form( method="post", action="/addSub")#subscription-form.form-horizontal.well.span6
+	form( method="post", action="/addSub")#subscription-form.form-horizontal.well
 		h1 Subscriptions
 		p#sub1.subheading Please insert your subscriptions.
 		fieldset
@@ -42,6 +42,11 @@
 						option(value='10') 10 min
 						option(value='15') 15 min
 						option(value='20') 20 min
+		#tags-cg.control-group
+			label#lsubtags.control-label(for='subtags-tf') Tags
+			.controls
+				ul#subtags
+		input#deftags(type='hidden', value=substags)
 		input#subid(type='hidden', name='subid')
 		.form-actions
 			button(class='btn-success', type='submit')#subscription-form-btn1.btn Add

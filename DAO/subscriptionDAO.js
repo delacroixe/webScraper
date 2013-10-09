@@ -20,9 +20,16 @@ function SubscriptionDAO(db) {
 
   this.getAll = function (callback) {
   	db.collection('subscriptions').find().toArray(function(e, res) {
-  		if (e) callback(e)
-		else callback(res)
-	});
+      if (e) callback(e);
+      else callback(res);
+    });
+  };
+
+  this.getAllTags = function(callback) {
+    db.collection('subscriptions').distinct('tags', function(e, res) {
+      if (e) callback(e);
+      else callback(res);
+    });
   };
 
   this.getOneById = function(id, callback){

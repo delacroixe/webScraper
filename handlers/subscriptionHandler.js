@@ -9,8 +9,8 @@ function SubscriptionHandler(db, ch){
 	"user strict";
 
 	var subs_type = [
-		{short: 'rss', name: 'RSS'},
-		{short: 'tw', name: 'Twitter'}
+		{short: 'rss', name: 'RSS'}/*,
+		{short: 'tw', name: 'Twitter'}*/
 	];
 
 	var subscriptionDAO = new SubscriptionDAO(db);
@@ -54,6 +54,12 @@ function SubscriptionHandler(db, ch){
 		return subs_type;
 	}
 
+	this.getSubscriptionTags = function(callback) {
+		subscriptionDAO.getAllTags(function(res) {
+			callback(res);
+		});
+	}
+
 	this.getTwInfo = function(username, callback) {
 		twitterHandler.getUserInfo(username, callback);
 	}
@@ -83,6 +89,7 @@ function SubscriptionHandler(db, ch){
 				o.url = data.url;
 				o.desc = data.desc;
 				o.refr = data.refr;
+				o.tags = data.tags;
 				o.date = moment().format('MMMM Do YYYY, h:mm:ss a');
 		        subscriptionDAO.update(o, function(err, result){
 					if(err){
