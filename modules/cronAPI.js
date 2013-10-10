@@ -95,8 +95,8 @@ function CronHandler(db, io) {
 		      			data = {
 				      		'titulo' : json.title,
 				      		'link' : json.resolved_url,
-				      		'fecha' : json,
-				      		'author' : json.uthor,
+				      		'fecha' : json.date,
+				      		'author' : json.author,
 				      		'texto' : json.text,
 				      		'entrada' : item.contentSnippet,
 				      		'def_cat' : json.tags,
