@@ -89,6 +89,7 @@ function CronHandler(db, io) {
 		      //console.log(response.responseData.feed.entries.length);
 		      var entries = response.responseData.feed.entries.reverse(); 
 		      entries.forEach(function(item) {
+		      	/*
 		      	diffBotAPI.getArticleJSON(item.link, function(json){
 		      		var data = {};
 		      		if(json != null) {
@@ -104,17 +105,18 @@ function CronHandler(db, io) {
 				      	};
 		      		}
 		      		else {
-				      	data = {
-				      		'titulo' : item.title,
-				      		'link' : item.link,
-				      		'fecha' : item.publishedDate,
-				      		'author' : item.author,
-				      		'texto' : item.content,
-				      		'entrada' : item.contentSnippet,
-				      		'def_cat' : item.categories,
-				      		'img' : imgFinder(item.content)
-				      	};
-		      		}
+		      		*/
+				    var data = {
+				    	'titulo' : item.title,
+				    	'link' : item.link,
+				    	'fecha' : item.publishedDate,
+				    	'author' : item.author,
+				    	'texto' : item.content,
+				      	'entrada' : item.contentSnippet,
+				      	'def_cat' : item.categories,
+				    	'img' : imgFinder(item.content)
+				    };
+		      		//}
 		      		data.tags = subscription.tags;
 		      		itemHandler.saveOne(data, function(e){});
 		      	});
